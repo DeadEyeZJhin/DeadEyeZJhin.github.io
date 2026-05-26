@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Name — Roblox Developer & Content Creator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #18181f;
+    --card: #16161e;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f5;
+    --muted: #8888a0;
+    --accent: #7c6af7;
+    --accent2: #a78bfa;
+    --accent-glow: rgba(124,106,247,0.15);
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 2.5rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(124,106,247,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(52,211,153,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  .hero-content { position: relative; max-width: 700px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(124,106,247,0.12);
+    border: 1px solid rgba(124,106,247,0.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    color: var(--accent2);
+    margin-bottom: 2rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .hero-badge span {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--accent);
+  }
+
+  .hero-desc {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 500px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.75rem 1.75rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover { background: #6b58e8; transform: translateY(-1px); }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent;
+    color: var(--text);
+    padding: 0.75rem 1.75rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-secondary:hover { background: var(--bg3); border-color: var(--accent); }
+
+  /* ── STATS ── */
+  .stats-bar {
+    display: flex; gap: 3rem; flex-wrap: wrap;
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat-item {}
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .stat-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 6rem 2.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 500px;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+
+  /* ── PROJECTS GRID ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .project-card:hover {
+    border-color: rgba(124,106,247,0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,106,247,0.1);
+  }
+
+  .card-thumb {
+    width: 100%; height: 200px;
+    background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .card-thumb-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .thumb-icon {
+    font-size: 2.5rem;
+    opacity: 0.4;
+  }
+
+  .gif-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(124,106,247,0.9);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .card-body { padding: 1.25rem; }
+
+  .card-type {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .card-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; font-weight: 300; }
+
+  .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .tag {
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* ── BUILDS GRID ── */
+  .builds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .build-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .build-card:hover {
+    border-color: rgba(52,211,153,0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+
+  .build-img {
+    width: 100%; height: 200px;
+    object-fit: cover;
+    background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .build-img-placeholder {
+    width: 100%; height: 200px;
+    background: linear-gradient(135deg, #14141c 0%, #1a1a26 100%);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .build-body { padding: 1.1rem 1.25rem; }
+
+  .build-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+
+  .build-meta {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-avatar-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+  }
+
+  .avatar-ring {
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--accent), var(--green));
+    position: relative;
+  }
+
+  .avatar-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+    overflow: hidden;
+  }
+
+  .avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    margin-bottom: 1rem;
+    font-weight: 300;
+    font-size: 1rem;
+  }
+
+  .skills-list {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.5rem;
+  }
+
+  .skill-pill {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  /* ── CONTACT ── */
+  .contact-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-wrap::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(124,106,247,0.1), transparent);
+    pointer-events: none;
+  }
+
+  .contact-wrap h2 { margin-bottom: 0.75rem; }
+
+  .contact-desc { color: var(--muted); margin-bottom: 2.5rem; font-weight: 300; }
+
+  .socials {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+  }
+
+  .social-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--bg3);
+    color: var(--text);
+    border: 1px solid var(--border2);
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .social-btn:hover { border-color: var(--accent); background: var(--accent-glow); color: var(--accent2); }
+
+  .social-icon { font-size: 1.1rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 2.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 300;
+  }
+
+  footer a { color: var(--accent2); text-decoration: none; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.7s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in:nth-child(1) { animation-delay: 0.1s; }
+  .fade-in:nth-child(2) { animation-delay: 0.25s; }
+  .fade-in:nth-child(3) { animation-delay: 0.4s; }
+  .fade-in:nth-child(4) { animation-delay: 0.55s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; }
+    .contact-wrap { padding: 2rem 1.5rem; }
+    .stats-bar { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">YourName.dev</a>
+  <ul class="nav-links">
+    <li><a href="#scripts">Scripts</a></li>
+    <li><a href="#builds">Builds</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="fade-in">
+      <div class="hero-badge">
+        <span></span>
+        Available for commissions
+      </div>
+    </div>
+    <div class="fade-in">
+      <h1>Roblox Dev &<br><em>Content Creator</em></h1>
+    </div>
+    <div class="fade-in">
+      <p class="hero-desc">
+        I build immersive Roblox systems and realistic builds — from cooking mechanics to NPCs. Also creating dev content on YouTube.
+      </p>
+    </div>
+    <div class="fade-in">
+      <div class="hero-cta">
+        <a href="#scripts" class="btn-primary">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+          View My Work
+        </a>
+        <a href="#contact" class="btn-secondary">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Hire Me
+        </a>
+      </div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Script Systems</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Builds</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1</div>
+        <div class="stat-label">YouTube Channel</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SCRIPTS SECTION -->
+<section id="scripts">
+  <p class="section-tag">Featured Systems</p>
+  <h2>Script Portfolio</h2>
+  <p class="section-desc">Roblox Lua systems built for performance and fun gameplay. Replace the GIF placeholders with your own recordings.</p>
+
+  <div class="projects-grid">
+
+    <!-- CHOP TREE SYSTEM -->
+    <div class="project-card">
+      <div class="card-thumb">
+        <!-- REPLACE THIS: <img src="chop-tree.gif" alt="Chop Tree System"> -->
+        <div class="card-thumb-placeholder">
+          <div class="thumb-icon">🪓</div>
+          <span>Replace with your GIF</span>
+          <small style="opacity:0.5; font-size:0.7rem">chop-tree.gif</small>
+        </div>
+        <span class="gif-badge">GIF</span>
+      </div>
+      <div class="card-body">
+        <div class="card-type">Featured System</div>
+        <div class="card-title">Chop Tree System</div>
+        <div class="card-desc">A fully interactive tree chopping system with animations, resource drops, and respawn mechanics.</div>
+        <div class="card-tags">
+          <span class="tag">Gameplay</span>
+          <span class="tag">Resource</span>
+          <span class="tag">Animation</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COOKING SYSTEM -->
+    <div class="project-card">
+      <div class="card-thumb">
+        <!-- REPLACE THIS: <img src="cooking.gif" alt="Cooking System"> -->
+        <div class="card-thumb-placeholder">
+          <div class="thumb-icon">🍳</div>
+          <span>Replace with your GIF</span>
+          <small style="opacity:0.5; font-size:0.7rem">cooking.gif</small>
+        </div>
+        <span class="gif-badge">GIF</span>
+      </div>
+      <div class="card-body">
+        <div class="card-type">Featured System</div>
+        <div class="card-title">Cooking System</div>
+        <div class="card-desc">A recipe-based cooking system with ingredient combining, timers, and food stat effects.</div>
+        <div class="card-tags">
+          <span class="tag">Gameplay</span>
+          <span class="tag">UI</span>
+          <span class="tag">Stats</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NPC SYSTEM -->
+    <div class="project-card">
+      <div class="card-thumb">
+        <!-- REPLACE THIS: <img src="npc.gif" alt="NPC System"> -->
+        <div class="card-thumb-placeholder">
+          <div class="thumb-icon">🤖</div>
+          <span>Replace with your GIF</span>
+          <small style="opacity:0.5; font-size:0.7rem">npc.gif</small>
+        </div>
+        <span class="gif-badge">GIF</span>
+      </div>
+      <div class="card-body">
+        <div class="card-type">Featured System</div>
+        <div class="card-title">NPC System</div>
+        <div class="card-desc">Smart NPC with pathfinding, dialogue trees, and customizable AI behavior states.</div>
+        <div class="card-tags">
+          <span class="tag">AI</span>
+          <span class="tag">Dialogue</span>
+          <span class="tag">Pathfinding</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- BUILDS SECTION -->
+<section id="builds">
+  <p class="section-tag">Showcase</p>
+  <h2>Builds Gallery</h2>
+  <p class="section-desc">Realistic Roblox Studio builds — no scripts, pure architecture and aesthetics. Replace placeholders with your screenshots.</p>
+
+  <div class="builds-grid">
+
+    <div class="build-card">
+      <!-- REPLACE: <img src="build1.png" class="build-img" alt="Build 1"> -->
+      <div class="build-img-placeholder">
+        <span style="font-size:2rem; opacity:0.3">🏗️</span>
+        <span style="font-size:0.75rem">Replace with build1.png</span>
+      </div>
+      <div class="build-body">
+        <div class="build-title">Build Name Here</div>
+        <div class="build-meta">Realistic · Roblox Studio</div>
+      </div>
+    </div>
+
+    <div class="build-card">
+      <div class="build-img-placeholder">
+        <span style="font-size:2rem; opacity:0.3">🏗️</span>
+        <span style="font-size:0.75rem">Replace with build2.png</span>
+      </div>
+      <div class="build-body">
+        <div class="build-title">Build Name Here</div>
+        <div class="build-meta">Realistic · Roblox Studio</div>
+      </div>
+    </div>
+
+    <div class="build-card">
+      <div class="build-img-placeholder">
+        <span style="font-size:2rem; opacity:0.3">🏗️</span>
+        <span style="font-size:0.75rem">Replace with build3.png</span>
+      </div>
+      <div class="build-body">
+        <div class="build-title">Build Name Here</div>
+        <div class="build-meta">Realistic · Roblox Studio</div>
+      </div>
+    </div>
+
+    <div class="build-card">
+      <div class="build-img-placeholder">
+        <span style="font-size:2rem; opacity:0.3">🏗️</span>
+        <span style="font-size:0.75rem">Replace with build4.png</span>
+      </div>
+      <div class="build-body">
+        <div class="build-title">Build Name Here</div>
+        <div class="build-meta">Realistic · Roblox Studio</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ABOUT SECTION -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-avatar-wrap">
+      <div class="avatar-ring">
+        <div class="avatar-inner">
+          <!-- REPLACE: <img src="avatar.png" alt="Your avatar"> -->
+          🎮
+        </div>
+      </div>
+      <div class="status-chip">
+        <span class="status-dot"></span>
+        Open for work
+      </div>
+    </div>
+    <div class="about-text">
+      <p class="section-tag">About Me</p>
+      <h2>Hey, I'm <span style="color:var(--accent2)">YourName</span></h2>
+      <p>
+        I'm a Roblox Studio Developer and YouTube Content Creator based in the Philippines. I specialize in building gameplay systems and realistic builds that bring Roblox worlds to life.
+      </p>
+      <p>
+        Whether it's scripting interactive systems in Lua or crafting detailed builds for showcase games — I put care into every project. I also document my dev journey on YouTube.
+      </p>
+      <p>
+        Currently open to commissions and collaborations.
+      </p>
+      <div class="skills-list">
+        <span class="skill-pill">Roblox Lua</span>
+        <span class="skill-pill">Roblox Studio</span>
+        <span class="skill-pill">Game Systems</span>
+        <span class="skill-pill">UI Design</span>
+        <span class="skill-pill">3D Building</span>
+        <span class="skill-pill">YouTube</span>
+        <span class="skill-pill">Video Editing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT SECTION -->
+<section id="contact">
+  <div class="contact-wrap">
+    <p class="section-tag" style="text-align:center">Get In Touch</p>
+    <h2>Let's Work Together</h2>
+    <p class="contact-desc">Looking to commission a system or build? Reach out through any of these platforms.</p>
+
+    <div class="socials">
+      <a href="YOUR_YOUTUBE_LINK" target="_blank" class="social-btn">
+        <span class="social-icon">▶</span> YouTube
+      </a>
+      <a href="YOUR_DISCORD" target="_blank" class="social-btn">
+        <span class="social-icon">💬</span> Discord
+      </a>
+      <a href="YOUR_ROBLOX_PROFILE" target="_blank" class="social-btn">
+        <span class="social-icon">🎮</span> Roblox
+      </a>
+      <a href="YOUR_TWITTER" target="_blank" class="social-btn">
+        <span class="social-icon">𝕏</span> Twitter / X
+      </a>
+      <a href="YOUR_DEVFORUM" target="_blank" class="social-btn">
+        <span class="social-icon">🛠</span> DevForum
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  Built with ♥ by <a href="#">YourName</a> · Roblox Developer & Content Creator
+</footer>
+
+</body>
+</html>
