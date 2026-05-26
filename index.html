@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Name — Roblox Developer & Content Creator</title>
+<title>DeadEyeZJhin — Roblox Developer</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -19,8 +19,6 @@
     --accent2: #a78bfa;
     --accent-glow: rgba(124,106,247,0.15);
     --green: #34d399;
-    --amber: #fbbf24;
-    --red: #f87171;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,12 +32,11 @@
     overflow-x: hidden;
   }
 
-  /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
-  /* ── NAV ── */
+  /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0;
     z-index: 100;
@@ -69,26 +66,29 @@
   }
   .nav-links a:hover { color: var(--text); }
 
-  /* ── HERO ── */
+  /* HERO — centered */
   .hero {
     min-height: 100vh;
-    display: flex; align-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 8rem 2.5rem 5rem;
     position: relative;
     overflow: hidden;
+    text-align: center;
   }
 
   .hero-bg {
     position: absolute; inset: 0;
-    background: 
-      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(124,106,247,0.12) 0%, transparent 70%),
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 40%, rgba(124,106,247,0.14) 0%, transparent 70%),
       radial-gradient(ellipse 40% 40% at 20% 80%, rgba(52,211,153,0.07) 0%, transparent 60%);
     pointer-events: none;
   }
 
   .hero-grid {
     position: absolute; inset: 0;
-    background-image: 
+    background-image:
       linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
     background-size: 60px 60px;
@@ -96,7 +96,13 @@
     mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
   }
 
-  .hero-content { position: relative; max-width: 700px; }
+  .hero-content {
+    position: relative;
+    max-width: 750px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
   .hero-badge {
     display: inline-flex; align-items: center; gap: 8px;
@@ -142,13 +148,13 @@
   .hero-desc {
     font-size: 1.1rem;
     color: var(--muted);
-    max-width: 500px;
+    max-width: 520px;
     margin-bottom: 2.5rem;
     font-weight: 300;
   }
 
   .hero-cta {
-    display: flex; gap: 1rem; flex-wrap: wrap;
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
   }
 
   .btn-primary {
@@ -180,28 +186,31 @@
   }
   .btn-secondary:hover { background: var(--bg3); border-color: var(--accent); }
 
-  /* ── STATS ── */
-  .stats-bar {
-    display: flex; gap: 3rem; flex-wrap: wrap;
-    padding: 1.5rem 0;
-    margin-top: 3rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .stat-item {}
-  .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--accent2);
-  }
-  .stat-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-
-  /* ── SECTIONS ── */
+  /* SECTIONS */
   section {
     padding: 6rem 2.5rem;
     max-width: 1100px;
     margin: 0 auto;
+  }
+
+  /* Section wrapper with background */
+  .section-bg-wrap {
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 0%, rgba(124,106,247,0.09) 0%, transparent 70%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .section-bg-wrap::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 40%, transparent 100%);
   }
 
   .section-tag {
@@ -229,10 +238,10 @@
     font-weight: 300;
   }
 
-  /* ── PROJECTS GRID ── */
+  /* PROJECTS GRID */
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.25rem;
   }
 
@@ -271,10 +280,7 @@
     text-align: center;
   }
 
-  .thumb-icon {
-    font-size: 2.5rem;
-    opacity: 0.4;
-  }
+  .thumb-icon { font-size: 2.5rem; opacity: 0.4; }
 
   .gif-badge {
     position: absolute; top: 10px; right: 10px;
@@ -321,10 +327,10 @@
     letter-spacing: 0.03em;
   }
 
-  /* ── BUILDS GRID ── */
+  /* BUILDS GRID */
   .builds-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
   }
 
@@ -334,20 +340,12 @@
     border-radius: 14px;
     overflow: hidden;
     transition: all 0.3s;
-    position: relative;
   }
 
   .build-card:hover {
     border-color: rgba(52,211,153,0.35);
     transform: translateY(-3px);
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-  }
-
-  .build-img {
-    width: 100%; height: 200px;
-    object-fit: cover;
-    background: var(--bg3);
-    display: flex; align-items: center; justify-content: center;
   }
 
   .build-img-placeholder {
@@ -370,12 +368,9 @@
     margin-bottom: 0.3rem;
   }
 
-  .build-meta {
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
+  .build-meta { font-size: 0.8rem; color: var(--muted); }
 
-  /* ── ABOUT ── */
+  /* ABOUT */
   .about-grid {
     display: grid;
     grid-template-columns: 1fr 1.6fr;
@@ -392,7 +387,6 @@
     border-radius: 50%;
     padding: 3px;
     background: linear-gradient(135deg, var(--accent), var(--green));
-    position: relative;
   }
 
   .avatar-inner {
@@ -424,16 +418,9 @@
     animation: pulse 2s infinite;
   }
 
-  .about-text p {
-    color: var(--muted);
-    margin-bottom: 1rem;
-    font-weight: 300;
-    font-size: 1rem;
-  }
+  .about-text p { color: var(--muted); margin-bottom: 1rem; font-weight: 300; }
 
-  .skills-list {
-    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.5rem;
-  }
+  .skills-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.5rem; }
 
   .skill-pill {
     background: var(--bg3);
@@ -442,10 +429,9 @@
     border-radius: 8px;
     font-size: 0.85rem;
     color: var(--text);
-    font-weight: 400;
   }
 
-  /* ── CONTACT ── */
+  /* CONTACT */
   .contact-wrap {
     background: var(--card);
     border: 1px solid var(--border);
@@ -464,12 +450,9 @@
   }
 
   .contact-wrap h2 { margin-bottom: 0.75rem; }
-
   .contact-desc { color: var(--muted); margin-bottom: 2.5rem; font-weight: 300; }
 
-  .socials {
-    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
-  }
+  .socials { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
 
   .social-btn {
     display: inline-flex; align-items: center; gap: 10px;
@@ -484,12 +467,22 @@
     transition: all 0.2s;
     font-family: 'DM Sans', sans-serif;
   }
-
   .social-btn:hover { border-color: var(--accent); background: var(--accent-glow); color: var(--accent2); }
 
-  .social-icon { font-size: 1.1rem; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-  /* ── FOOTER ── */
+  /* ANIMATIONS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.7s ease forwards;
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  .fade-in:nth-child(1) { animation-delay: 0.1s; }
+  .fade-in:nth-child(2) { animation-delay: 0.25s; }
+  .fade-in:nth-child(3) { animation-delay: 0.4s; }
+  .fade-in:nth-child(4) { animation-delay: 0.55s; }
+
   footer {
     border-top: 1px solid var(--border);
     padding: 2rem 2.5rem;
@@ -498,41 +491,16 @@
     font-size: 0.85rem;
     font-weight: 300;
   }
-
   footer a { color: var(--accent2); text-decoration: none; }
 
-  /* ── DIVIDER ── */
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 0;
-  }
-
-  /* ── ANIMATIONS ── */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(24px);
-    animation: fadeUp 0.7s ease forwards;
-  }
-
-  @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .fade-in:nth-child(1) { animation-delay: 0.1s; }
-  .fade-in:nth-child(2) { animation-delay: 0.25s; }
-  .fade-in:nth-child(3) { animation-delay: 0.4s; }
-  .fade-in:nth-child(4) { animation-delay: 0.55s; }
-
-  /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
     .hero { padding: 7rem 1.5rem 4rem; }
     section { padding: 4rem 1.5rem; }
     .about-grid { grid-template-columns: 1fr; }
+    .builds-grid { grid-template-columns: 1fr; }
     .contact-wrap { padding: 2rem 1.5rem; }
-    .stats-bar { gap: 1.5rem; }
   }
 </style>
 </head>
@@ -540,7 +508,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">YourName.dev</a>
+  <a href="#" class="nav-logo">DeadEyeZJhin</a>
   <ul class="nav-links">
     <li><a href="#scripts">Scripts</a></li>
     <li><a href="#builds">Builds</a></li>
@@ -549,7 +517,7 @@
   </ul>
 </nav>
 
-<!-- HERO -->
+<!-- HERO — centered -->
 <div class="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
@@ -561,11 +529,11 @@
       </div>
     </div>
     <div class="fade-in">
-      <h1>Roblox Dev &<br><em>Content Creator</em></h1>
+      <h1>Roblox Studio<br><em>Developer</em></h1>
     </div>
     <div class="fade-in">
       <p class="hero-desc">
-        I build immersive Roblox systems and realistic builds — from cooking mechanics to NPCs. Also creating dev content on YouTube.
+        I build immersive Roblox systems and realistic builds — from cooking mechanics to NPC AI. Sharing my work on YouTube.
       </p>
     </div>
     <div class="fade-in">
@@ -580,193 +548,164 @@
         </a>
       </div>
     </div>
-
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-num">3+</div>
-        <div class="stat-label">Script Systems</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">10+</div>
-        <div class="stat-label">Builds</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">1</div>
-        <div class="stat-label">YouTube Channel</div>
-      </div>
-    </div>
   </div>
+</div>
+
+<!-- SCRIPTS SECTION with background -->
+<div class="section-bg-wrap">
+  <section id="scripts">
+    <p class="section-tag">Featured Systems</p>
+    <h2>Script Portfolio</h2>
+    <p class="section-desc">Roblox Lua systems built for fun gameplay. Replace the GIF placeholders with your own screen recordings.</p>
+
+    <div class="projects-grid">
+
+      <!-- CHOP TREE -->
+      <div class="project-card">
+        <div class="card-thumb">
+          <!-- TO ADD YOUR GIF: delete the div below and replace with: <img src="chop-tree.gif" alt="Chop Tree System"> -->
+          <div class="card-thumb-placeholder">
+            <div class="thumb-icon">🪓</div>
+            <span>Add chop-tree.gif here</span>
+          </div>
+          <span class="gif-badge">GIF</span>
+        </div>
+        <div class="card-body">
+          <div class="card-type">Featured System</div>
+          <div class="card-title">Chop Tree System</div>
+          <div class="card-desc">A fully interactive tree chopping system with animations, resource drops, and respawn mechanics.</div>
+          <div class="card-tags">
+            <span class="tag">Gameplay</span>
+            <span class="tag">Resource</span>
+            <span class="tag">Animation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COOKING -->
+      <div class="project-card">
+        <div class="card-thumb">
+          <!-- TO ADD YOUR GIF: delete the div below and replace with: <img src="cooking.gif" alt="Cooking System"> -->
+          <div class="card-thumb-placeholder">
+            <div class="thumb-icon">🍳</div>
+            <span>Add cooking.gif here</span>
+          </div>
+          <span class="gif-badge">GIF</span>
+        </div>
+        <div class="card-body">
+          <div class="card-type">Featured System</div>
+          <div class="card-title">Cooking System</div>
+          <div class="card-desc">A recipe-based cooking system with ingredient combining, timers, and food stat effects.</div>
+          <div class="card-tags">
+            <span class="tag">Gameplay</span>
+            <span class="tag">UI</span>
+            <span class="tag">Stats</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NPC -->
+      <div class="project-card">
+        <div class="card-thumb">
+          <!-- TO ADD YOUR GIF: delete the div below and replace with: <img src="npc.gif" alt="NPC System"> -->
+          <div class="card-thumb-placeholder">
+            <div class="thumb-icon">🤖</div>
+            <span>Add npc.gif here</span>
+          </div>
+          <span class="gif-badge">GIF</span>
+        </div>
+        <div class="card-body">
+          <div class="card-type">Featured System</div>
+          <div class="card-title">NPC System</div>
+          <div class="card-desc">Smart NPC with pathfinding, dialogue trees, and customizable AI behavior states.</div>
+          <div class="card-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Dialogue</span>
+            <span class="tag">Pathfinding</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- BUILDS SECTION with background -->
+<div class="section-bg-wrap" style="background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(52,211,153,0.07) 0%, transparent 70%);">
+  <section id="builds">
+    <p class="section-tag">Showcase</p>
+    <h2>Builds Gallery</h2>
+    <p class="section-desc">Realistic Roblox Studio builds — pure architecture and aesthetics. Replace placeholders with your screenshots.</p>
+
+    <div class="builds-grid">
+
+      <div class="build-card">
+        <!-- TO ADD IMAGE: delete div below, replace with: <img src="build1.png" style="width:100%;height:200px;object-fit:cover;" alt="Build 1"> -->
+        <div class="build-img-placeholder">
+          <span style="font-size:2rem;opacity:0.3">🏗️</span>
+          <span>Add build1.png here</span>
+        </div>
+        <div class="build-body">
+          <div class="build-title">Build Name Here</div>
+          <div class="build-meta">Realistic · Roblox Studio</div>
+        </div>
+      </div>
+
+      <div class="build-card">
+        <!-- TO ADD IMAGE: delete div below, replace with: <img src="build2.png" style="width:100%;height:200px;object-fit:cover;" alt="Build 2"> -->
+        <div class="build-img-placeholder">
+          <span style="font-size:2rem;opacity:0.3">🏗️</span>
+          <span>Add build2.png here</span>
+        </div>
+        <div class="build-body">
+          <div class="build-title">Build Name Here</div>
+          <div class="build-meta">Realistic · Roblox Studio</div>
+        </div>
+      </div>
+
+      <div class="build-card">
+        <!-- TO ADD IMAGE: delete div below, replace with: <img src="build3.png" style="width:100%;height:200px;object-fit:cover;" alt="Build 3"> -->
+        <div class="build-img-placeholder">
+          <span style="font-size:2rem;opacity:0.3">🏗️</span>
+          <span>Add build3.png here</span>
+        </div>
+        <div class="build-body">
+          <div class="build-title">Build Name Here</div>
+          <div class="build-meta">Realistic · Roblox Studio</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 </div>
 
 <hr class="divider">
 
-<!-- SCRIPTS SECTION -->
-<section id="scripts">
-  <p class="section-tag">Featured Systems</p>
-  <h2>Script Portfolio</h2>
-  <p class="section-desc">Roblox Lua systems built for performance and fun gameplay. Replace the GIF placeholders with your own recordings.</p>
-
-  <div class="projects-grid">
-
-    <!-- CHOP TREE SYSTEM -->
-    <div class="project-card">
-      <div class="card-thumb">
-        <!-- REPLACE THIS: <img src="chop-tree.gif" alt="Chop Tree System"> -->
-        <div class="card-thumb-placeholder">
-          <div class="thumb-icon">🪓</div>
-          <span>Replace with your GIF</span>
-          <small style="opacity:0.5; font-size:0.7rem">chop-tree.gif</small>
-        </div>
-        <span class="gif-badge">GIF</span>
-      </div>
-      <div class="card-body">
-        <div class="card-type">Featured System</div>
-        <div class="card-title">Chop Tree System</div>
-        <div class="card-desc">A fully interactive tree chopping system with animations, resource drops, and respawn mechanics.</div>
-        <div class="card-tags">
-          <span class="tag">Gameplay</span>
-          <span class="tag">Resource</span>
-          <span class="tag">Animation</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- COOKING SYSTEM -->
-    <div class="project-card">
-      <div class="card-thumb">
-        <!-- REPLACE THIS: <img src="cooking.gif" alt="Cooking System"> -->
-        <div class="card-thumb-placeholder">
-          <div class="thumb-icon">🍳</div>
-          <span>Replace with your GIF</span>
-          <small style="opacity:0.5; font-size:0.7rem">cooking.gif</small>
-        </div>
-        <span class="gif-badge">GIF</span>
-      </div>
-      <div class="card-body">
-        <div class="card-type">Featured System</div>
-        <div class="card-title">Cooking System</div>
-        <div class="card-desc">A recipe-based cooking system with ingredient combining, timers, and food stat effects.</div>
-        <div class="card-tags">
-          <span class="tag">Gameplay</span>
-          <span class="tag">UI</span>
-          <span class="tag">Stats</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- NPC SYSTEM -->
-    <div class="project-card">
-      <div class="card-thumb">
-        <!-- REPLACE THIS: <img src="npc.gif" alt="NPC System"> -->
-        <div class="card-thumb-placeholder">
-          <div class="thumb-icon">🤖</div>
-          <span>Replace with your GIF</span>
-          <small style="opacity:0.5; font-size:0.7rem">npc.gif</small>
-        </div>
-        <span class="gif-badge">GIF</span>
-      </div>
-      <div class="card-body">
-        <div class="card-type">Featured System</div>
-        <div class="card-title">NPC System</div>
-        <div class="card-desc">Smart NPC with pathfinding, dialogue trees, and customizable AI behavior states.</div>
-        <div class="card-tags">
-          <span class="tag">AI</span>
-          <span class="tag">Dialogue</span>
-          <span class="tag">Pathfinding</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- BUILDS SECTION -->
-<section id="builds">
-  <p class="section-tag">Showcase</p>
-  <h2>Builds Gallery</h2>
-  <p class="section-desc">Realistic Roblox Studio builds — no scripts, pure architecture and aesthetics. Replace placeholders with your screenshots.</p>
-
-  <div class="builds-grid">
-
-    <div class="build-card">
-      <!-- REPLACE: <img src="build1.png" class="build-img" alt="Build 1"> -->
-      <div class="build-img-placeholder">
-        <span style="font-size:2rem; opacity:0.3">🏗️</span>
-        <span style="font-size:0.75rem">Replace with build1.png</span>
-      </div>
-      <div class="build-body">
-        <div class="build-title">Build Name Here</div>
-        <div class="build-meta">Realistic · Roblox Studio</div>
-      </div>
-    </div>
-
-    <div class="build-card">
-      <div class="build-img-placeholder">
-        <span style="font-size:2rem; opacity:0.3">🏗️</span>
-        <span style="font-size:0.75rem">Replace with build2.png</span>
-      </div>
-      <div class="build-body">
-        <div class="build-title">Build Name Here</div>
-        <div class="build-meta">Realistic · Roblox Studio</div>
-      </div>
-    </div>
-
-    <div class="build-card">
-      <div class="build-img-placeholder">
-        <span style="font-size:2rem; opacity:0.3">🏗️</span>
-        <span style="font-size:0.75rem">Replace with build3.png</span>
-      </div>
-      <div class="build-body">
-        <div class="build-title">Build Name Here</div>
-        <div class="build-meta">Realistic · Roblox Studio</div>
-      </div>
-    </div>
-
-    <div class="build-card">
-      <div class="build-img-placeholder">
-        <span style="font-size:2rem; opacity:0.3">🏗️</span>
-        <span style="font-size:0.75rem">Replace with build4.png</span>
-      </div>
-      <div class="build-body">
-        <div class="build-title">Build Name Here</div>
-        <div class="build-meta">Realistic · Roblox Studio</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- ABOUT SECTION -->
+<!-- ABOUT -->
 <section id="about">
   <div class="about-grid">
     <div class="about-avatar-wrap">
       <div class="avatar-ring">
         <div class="avatar-inner">
-          <!-- REPLACE: <img src="avatar.png" alt="Your avatar"> -->
+          <!-- TO ADD AVATAR: replace emoji with: <img src="avatar.png" alt="DeadEyeZJhin"> -->
           🎮
         </div>
       </div>
       <div class="status-chip">
         <span class="status-dot"></span>
-        Open for work
+        Open for commissions
       </div>
     </div>
     <div class="about-text">
       <p class="section-tag">About Me</p>
-      <h2>Hey, I'm <span style="color:var(--accent2)">YourName</span></h2>
+      <h2>Hey, I'm <span style="color:var(--accent2)">DeadEyeZJhin</span></h2>
       <p>
-        I'm a Roblox Studio Developer and YouTube Content Creator based in the Philippines. I specialize in building gameplay systems and realistic builds that bring Roblox worlds to life.
+        I'm a Roblox Studio Developer based in the Philippines. I specialize in building gameplay systems and realistic builds that bring Roblox worlds to life.
       </p>
       <p>
-        Whether it's scripting interactive systems in Lua or crafting detailed builds for showcase games — I put care into every project. I also document my dev journey on YouTube.
+        Whether it's scripting interactive systems in Lua or crafting detailed builds for showcase games — I put care into every project. I also share my work and dev journey on YouTube.
       </p>
-      <p>
-        Currently open to commissions and collaborations.
-      </p>
+      <p>Currently open to commissions and collaborations.</p>
       <div class="skills-list">
         <span class="skill-pill">Roblox Lua</span>
         <span class="skill-pill">Roblox Studio</span>
@@ -774,7 +713,6 @@
         <span class="skill-pill">UI Design</span>
         <span class="skill-pill">3D Building</span>
         <span class="skill-pill">YouTube</span>
-        <span class="skill-pill">Video Editing</span>
       </div>
     </div>
   </div>
@@ -782,28 +720,24 @@
 
 <hr class="divider">
 
-<!-- CONTACT SECTION -->
+<!-- CONTACT -->
 <section id="contact">
   <div class="contact-wrap">
     <p class="section-tag" style="text-align:center">Get In Touch</p>
     <h2>Let's Work Together</h2>
     <p class="contact-desc">Looking to commission a system or build? Reach out through any of these platforms.</p>
-
     <div class="socials">
-      <a href="YOUR_YOUTUBE_LINK" target="_blank" class="social-btn">
-        <span class="social-icon">▶</span> YouTube
+      <a href="https://www.youtube.com/@DeadEyeZJhinBRUH" target="_blank" class="social-btn">
+        <span>▶</span> YouTube
       </a>
-      <a href="YOUR_DISCORD" target="_blank" class="social-btn">
-        <span class="social-icon">💬</span> Discord
+      <a href="https://discord.gg/yjwMz3FTtS" target="_blank" class="social-btn">
+        <span>💬</span> Discord
       </a>
-      <a href="YOUR_ROBLOX_PROFILE" target="_blank" class="social-btn">
-        <span class="social-icon">🎮</span> Roblox
+      <a href="https://www.roblox.com/users/686562757/profile" target="_blank" class="social-btn">
+        <span>🎮</span> Roblox
       </a>
-      <a href="YOUR_TWITTER" target="_blank" class="social-btn">
-        <span class="social-icon">𝕏</span> Twitter / X
-      </a>
-      <a href="YOUR_DEVFORUM" target="_blank" class="social-btn">
-        <span class="social-icon">🛠</span> DevForum
+      <a href="https://www.facebook.com/DeadEyeZJhinBRUH" target="_blank" class="social-btn">
+        <span>📘</span> Facebook
       </a>
     </div>
   </div>
@@ -811,7 +745,7 @@
 
 <!-- FOOTER -->
 <footer>
-  Built with ♥ by <a href="#">YourName</a> · Roblox Developer & Content Creator
+  Built with ♥ by <a href="https://www.youtube.com/@DeadEyeZJhinBRUH">DeadEyeZJhin</a> · Roblox Studio Developer
 </footer>
 
 </body>
