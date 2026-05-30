@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banner Creator — DeadEyeZJhin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--bg3:#18181f;--card:#16161e;--border:rgba(255,255,255,0.07);
+    --border2:rgba(255,255,255,0.12);--text:#f0f0f5;--muted:#8888a0;
+    --accent:#7c6af7;--accent2:#a78bfa;--green:#34d399;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+  body::before{content:'';position:fixed;inset:0;
+    background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(124,106,247,.1),transparent 70%);
+    pointer-events:none;z-index:0;}
+  nav{width:100%;display:flex;align-items:center;justify-content:space-between;
+    padding:1rem 2.5rem;background:rgba(10,10,15,.9);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+  .nav-logo{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--accent2);text-decoration:none;}
+  .nav-back{display:inline-flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500;transition:color .2s;}
+  .nav-back:hover{color:var(--text);}
+  .page{position:relative;z-index:1;width:100%;max-width:1200px;padding:3rem 2rem 4rem;}
+  .eyebrow{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);margin-bottom:.4rem;}
+  h1{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:700;letter-spacing:-.025em;margin-bottom:.5rem;}
+  .page-sub{color:var(--muted);font-size:.9rem;margin-bottom:2.5rem;}
+  .preview-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1.5rem;position:relative;}
+  .preview-label{position:absolute;top:12px;left:16px;background:rgba(10,10,15,.8);border:1px solid var(--border2);border-radius:100px;padding:4px 12px;font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;z-index:2;}
+  #preview-canvas{width:100%;height:auto;display:block;}
+  .loading-overlay{position:absolute;inset:0;background:var(--card);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;z-index:5;}
+  .loading-overlay.hidden{display:none;}
+  .spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-text{color:var(--muted);font-size:.85rem;}
+  .controls{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+  .btn-download{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;padding:.75rem 1.75rem;border-radius:8px;font-size:.9rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+  .btn-download:hover{background:#6b58e8;transform:translateY(-1px);}
+  .btn-download:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+  .btn-refresh{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text);padding:.75rem 1.5rem;border-radius:8px;font-size:.9rem;font-weight:500;border:1px solid var(--border2);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+  .btn-refresh:hover{background:var(--bg3);border-color:var(--accent);}
+  .info-box{background:rgba(124,106,247,.07);border:1px solid rgba(124,106,247,.2);border-radius:10px;padding:.9rem 1.2rem;font-size:.82rem;color:var(--muted);margin-top:1.5rem;line-height:1.6;}
+  .info-box strong{color:var(--accent2);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">DeadEyeZJhin</a>
+  <a href="index.html" class="nav-back">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Back to Portfolio
+  </a>
+</nav>
+<div class="page">
+  <div class="eyebrow">Export Tool</div>
+  <h1>Banner Creator</h1>
+  <p class="page-sub">Generate a 1920×1080 commission banner for Discord, Facebook, or any platform.</p>
+  <div class="preview-wrap">
+    <div class="preview-label">Preview — 1920 × 1080</div>
+    <div class="loading-overlay" id="loading">
+      <div class="spinner"></div>
+      <div class="loading-text">Rendering banner…</div>
+    </div>
+    <canvas id="preview-canvas" width="1920" height="1080"></canvas>
+  </div>
+  <div class="controls">
+    <button class="btn-download" id="dl-btn" onclick="downloadBanner()" disabled>
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      Download Banner (1920×1080 PNG)
+    </button>
+    <button class="btn-refresh" onclick="renderBanner()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      Re-render
+    </button>
+  </div>
+  <div class="info-box">
+    <strong>How to post:</strong> Download the PNG → Upload to Discord or Facebook as an image post. Caption:<br>
+    <strong>https://deadeyezjhin.github.io</strong>
+  </div>
+</div>
+<canvas id="download-canvas" width="1920" height="1080" style="display:none;"></canvas>
+
+<script>
+const SOURCES={
+  avatar:'avatar.png',
+  choptree:'chop-tree.gif',cooking:'cooking.gif',npc:'npc.gif',
+  grab:'grab.gif',hand:'hand.gif',interactive:'Interactive.gif',
+  build1:'build1.png',build2:'build2.png',build3:'build3.png'
+};
+const PROJECTS=[
+  {key:'choptree',name:'Chop Tree System'},
+  {key:'cooking', name:'Cooking System'},
+  {key:'npc',     name:'NPC System'},
+  {key:'grab',    name:'Grab System'},
+  {key:'hand',    name:'Hand Movement System'},
+  {key:'interactive',name:'Interactive System'},
+];
+const BUILDS=[
+  {key:'build1',name:'Realism'},
+  {key:'build2',name:'Realistic Furniture'},
+  {key:'build3',name:'Realistic Houses'},
+];
+const SKILLS=['Roblox Lua','Roblox Studio','Game Systems','UI Design','3D Building','YouTube'];
+let images={};
+
+function loadImage(src){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>resolve(img);
+    img.onerror=()=>{
+      const ph=Object.assign(document.createElement('canvas'),{width:420,height:236});
+      const c=ph.getContext('2d');
+      c.fillStyle='#1a1a26';c.fillRect(0,0,420,236);
+      c.fillStyle='#444';c.font='14px sans-serif';c.textAlign='center';c.fillText('No image',210,118);
+      const f=new Image();f.onload=()=>resolve(f);f.src=ph.toDataURL();
+    };
+    img.src=src;
+  });
+}
+
+// Draw image with cover-crop (no stretching)
+function drawCover(ctx,img,dx,dy,dw,dh){
+  if(!img||img.width===0||img.height===0){
+    ctx.fillStyle='#1a1a26';ctx.fillRect(dx,dy,dw,dh);return;
+  }
+  const srcR=img.width/img.height;
+  const dstR=dw/dh;
+  let sx,sy,sw,sh;
+  if(srcR>dstR){sh=img.height;sw=sh*dstR;sx=(img.width-sw)/2;sy=0;}
+  else{sw=img.width;sh=sw/dstR;sx=0;sy=(img.height-sh)/2;}
+  ctx.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
+}
+
+function drawBannerOnCanvas(ctx){
+  const W=1920,H=1080;
+
+  // ── BACKGROUND ──
+  ctx.fillStyle='#0a0a0f';ctx.fillRect(0,0,W,H);
+
+  const g1=ctx.createRadialGradient(1250,400,0,1250,400,980);
+  g1.addColorStop(0,'rgba(124,106,247,0.32)');
+  g1.addColorStop(0.4,'rgba(124,106,247,0.10)');
+  g1.addColorStop(1,'rgba(124,106,247,0)');
+  ctx.fillStyle=g1;ctx.fillRect(0,0,W,H);
+
+  const g1b=ctx.createRadialGradient(1780,80,0,1780,80,500);
+  g1b.addColorStop(0,'rgba(167,139,250,0.18)');g1b.addColorStop(1,'rgba(167,139,250,0)');
+  ctx.fillStyle=g1b;ctx.fillRect(0,0,W,H);
+
+  const g2=ctx.createRadialGradient(120,1000,0,120,1000,400);
+  g2.addColorStop(0,'rgba(52,211,153,0.14)');g2.addColorStop(1,'rgba(52,211,153,0)');
+  ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,0.022)';ctx.lineWidth=1;
+  for(let x=0;x<=W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<=H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  // Divider
+  const dg=ctx.createLinearGradient(560,0,560,H);
+  dg.addColorStop(0,'rgba(124,106,247,0)');dg.addColorStop(0.2,'rgba(124,106,247,0.38)');
+  dg.addColorStop(0.8,'rgba(124,106,247,0.38)');dg.addColorStop(1,'rgba(124,106,247,0)');
+  ctx.strokeStyle=dg;ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(560,0);ctx.lineTo(560,H);ctx.stroke();
+
+  // ════════════════════════════
+  // LEFT PANEL  cx=280
+  // ════════════════════════════
+  const cx=280;
+
+  // Avatar — vertically centered on left
+  const aR=138, aY=350;
+  ctx.save();
+  ctx.beginPath();ctx.arc(cx,aY,aR,0,Math.PI*2);ctx.clip();
+  drawCover(ctx,images.avatar,cx-aR,aY-aR,aR*2,aR*2);
+  ctx.restore();
+  // Ring gradient
+  const rg=ctx.createLinearGradient(cx-aR,aY-aR,cx+aR,aY+aR);
+  rg.addColorStop(0,'#7c6af7');rg.addColorStop(1,'#34d399');
+  ctx.strokeStyle=rg;ctx.lineWidth=6;
+  ctx.beginPath();ctx.arc(cx,aY,aR+5,0,Math.PI*2);ctx.stroke();
+
+  // Name
+  ctx.fillStyle='#f0f0f5';
+  ctx.font='bold 58px Syne,sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('DeadEyeZJhin',cx,aY+aR+70);
+
+  // Subtitle
+  ctx.fillStyle='#8888a0';
+  ctx.font='500 22px DM Sans,sans-serif';
+  ctx.fillText('ROBLOX STUDIO DEVELOPER',cx,aY+aR+104);
+
+  // ── Commission Pill (BIG) ──
+  const pW=400,pH=68,pX=cx-pW/2,pY=aY+aR+126;
+  roundRect(ctx,pX,pY,pW,pH,pH/2);
+  ctx.fillStyle='rgba(124,106,247,0.16)';ctx.fill();
+  ctx.strokeStyle='rgba(124,106,247,0.6)';ctx.lineWidth=2;ctx.stroke();
+  // Glow behind pill
+  ctx.save();
+  ctx.shadowColor='rgba(124,106,247,0.5)';ctx.shadowBlur=28;
+  roundRect(ctx,pX,pY,pW,pH,pH/2);ctx.stroke();
+  ctx.restore();
+  // Green dot
+  ctx.fillStyle='#34d399';
+  ctx.beginPath();ctx.arc(pX+34,pY+pH/2,10,0,Math.PI*2);ctx.fill();
+  // Text
+  ctx.fillStyle='#ffffff';
+  ctx.font='bold 26px DM Sans,sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('OPEN FOR COMMISSION',pX+56,pY+pH/2+9);
+
+  // ── Caption ──
+  const capY=pY+pH+30;
+  ctx.fillStyle='rgba(200,200,220,0.75)';
+  ctx.font='400 20px DM Sans,sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('Hey! I\'m available for Roblox scripting & build projects.',cx,capY);
+  ctx.fillText('Visit my portfolio below to see my work — let\'s create!',cx,capY+30);
+
+  // URL
+  ctx.fillStyle='#6666a0';
+  ctx.font='500 18px DM Sans,sans-serif';
+  ctx.fillText('deadeyezjhin.github.io',cx,capY+72);
+
+  // Philippines
+  ctx.fillStyle='#44445a';
+  ctx.font='16px DM Sans,sans-serif';
+  ctx.fillText('🇵🇭  Philippines',cx,capY+98);
+
+  // ── Skill Pills ──
+  const skillStartY=capY+126;
+  const skillFont='500 16px DM Sans,sans-serif';
+  const skillPH=34,skillPad=22,skillGap=10;
+
+  function drawSkillRow(skills,rowY){
+    ctx.font=skillFont;
+    const widths=skills.map(s=>ctx.measureText(s).width+skillPad*2);
+    const total=widths.reduce((a,b)=>a+b,0)+(skills.length-1)*skillGap;
+    let sx=cx-total/2;
+    skills.forEach((sk,i)=>{
+      const sw=widths[i];
+      roundRect(ctx,sx,rowY,sw,skillPH,skillPH/2);
+      ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.11)';ctx.lineWidth=1;ctx.stroke();
+      ctx.fillStyle='#c0c0d4';ctx.font=skillFont;ctx.textAlign='left';
+      ctx.fillText(sk,sx+skillPad,rowY+skillPH/2+6);
+      sx+=sw+skillGap;
+    });
+  }
+  drawSkillRow(SKILLS.slice(0,3),skillStartY);
+  drawSkillRow(SKILLS.slice(3,6),skillStartY+skillPH+10);
+
+  // ════════════════════════════
+  // RIGHT PANEL  rX=600
+  // ════════════════════════════
+  const rX=600,rW=W-rX-36; // ~1284px
+
+  // Column math — 3 equal columns
+  const tGap=24;
+  const tW=Math.floor((rW-tGap*2)/3); // ~412
+  const tH=Math.floor(tW*9/16);        // ~231 — true 16:9, no stretch
+
+  // ── Featured Projects heading ──
+  ctx.fillStyle='#f0f0f5';
+  ctx.font='bold 46px Syne,sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('Featured Projects',rX,54);
+  // Accent line
+  const alg=ctx.createLinearGradient(rX,0,rX+500,0);
+  alg.addColorStop(0,'#7c6af7');alg.addColorStop(1,'rgba(124,106,247,0)');
+  ctx.strokeStyle=alg;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(rX,70);ctx.lineTo(rX+500,70);ctx.stroke();
+
+  const tStartY=84;
+  const nameH=32; // label area below each thumb
+
+  PROJECTS.forEach((proj,i)=>{
+    const col=i%3,row=Math.floor(i/3);
+    const tx=rX+col*(tW+tGap);
+    const ty=tStartY+row*(tH+nameH+18);
+
+    // Shadow + card bg
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.55)';ctx.shadowBlur=22;ctx.shadowOffsetY=7;
+    roundRect(ctx,tx,ty,tW,tH,10);ctx.fillStyle='#16161e';ctx.fill();
+    ctx.restore();
+
+    // Image — cover crop (no stretching!)
+    ctx.save();
+    roundRect(ctx,tx,ty,tW,tH,10);ctx.clip();
+    drawCover(ctx,images[proj.key],tx,ty,tW,tH);
+    // Bottom gradient for text readability
+    const ig=ctx.createLinearGradient(tx,ty,tx,ty+tH);
+    ig.addColorStop(0.6,'rgba(0,0,0,0)');ig.addColorStop(1,'rgba(0,0,0,0.45)');
+    ctx.fillStyle=ig;ctx.fillRect(tx,ty,tW,tH);
+    ctx.restore();
+
+    // Border
+    roundRect(ctx,tx,ty,tW,tH,10);
+    ctx.strokeStyle='rgba(124,106,247,0.18)';ctx.lineWidth=1;ctx.stroke();
+
+    // System name
+    ctx.fillStyle='#e0e0f0';
+    ctx.font='bold 17px Syne,sans-serif';
+    ctx.textAlign='left';
+    ctx.fillText(proj.name,tx,ty+tH+22);
+  });
+
+  // ── Builds Gallery heading ──
+  const buildsHeadY=tStartY+2*(tH+nameH+18)+8;
+  ctx.fillStyle='#f0f0f5';
+  ctx.font='bold 38px Syne,sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('Builds Gallery',rX,buildsHeadY+36);
+  // Green accent line
+  const blg=ctx.createLinearGradient(rX,0,rX+400,0);
+  blg.addColorStop(0,'#34d399');blg.addColorStop(1,'rgba(52,211,153,0)');
+  ctx.strokeStyle=blg;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(rX,buildsHeadY+50);ctx.lineTo(rX+400,buildsHeadY+50);ctx.stroke();
+
+  const bStartY=buildsHeadY+62;
+  // Build thumb height — fill remaining space minus name labels and bottom margin
+  const remaining=H-bStartY-nameH-36; // 36px bottom margin
+  const bH=Math.min(remaining, Math.floor(tW*9/16*0.72)); // ~166px, same width as project thumbs
+
+  BUILDS.forEach((build,i)=>{
+    const tx=rX+i*(tW+tGap);
+    const ty=bStartY;
+
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.5)';ctx.shadowBlur=18;ctx.shadowOffsetY=5;
+    roundRect(ctx,tx,ty,tW,bH,10);ctx.fillStyle='#16161e';ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    roundRect(ctx,tx,ty,tW,bH,10);ctx.clip();
+    drawCover(ctx,images[build.key],tx,ty,tW,bH); // cover crop — no stretch!
+    const bg2=ctx.createLinearGradient(tx,ty,tx,ty+bH);
+    bg2.addColorStop(0.5,'rgba(0,0,0,0)');bg2.addColorStop(1,'rgba(0,0,0,0.5)');
+    ctx.fillStyle=bg2;ctx.fillRect(tx,ty,tW,bH);
+    ctx.restore();
+
+    roundRect(ctx,tx,ty,tW,bH,10);
+    ctx.strokeStyle='rgba(52,211,153,0.22)';ctx.lineWidth=1;ctx.stroke();
+
+    // Build name
+    ctx.fillStyle='#e0e0f0';
+    ctx.font='bold 17px Syne,sans-serif';
+    ctx.textAlign='left';
+    ctx.fillText(build.name,tx,ty+bH+22);
+  });
+
+  // Watermark
+  ctx.fillStyle='rgba(136,136,160,0.3)';
+  ctx.font='14px DM Sans,sans-serif';
+  ctx.textAlign='right';
+  ctx.fillText('deadeyezjhin.github.io',W-36,H-24);
+}
+
+async function renderBanner(){
+  document.getElementById('loading').classList.remove('hidden');
+  document.getElementById('dl-btn').disabled=true;
+  for(const key of Object.keys(SOURCES)) images[key]=await loadImage(SOURCES[key]);
+  drawBannerOnCanvas(document.getElementById('preview-canvas').getContext('2d'));
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('dl-btn').disabled=false;
+}
+
+function downloadBanner(){
+  const dl=document.getElementById('download-canvas');
+  drawBannerOnCanvas(dl.getContext('2d'));
+  const a=document.createElement('a');
+  a.download='DeadEyeZJhin-Commission-Banner.png';
+  a.href=dl.toDataURL('image/png');
+  a.click();
+}
+
+window.addEventListener('load',renderBanner);
+</script>
+</body>
+</html>
