@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeadEyeZJhin — Roblox Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #18181f;
+    --card: #16161e;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f5;
+    --muted: #8888a0;
+    --accent: #7c6af7;
+    --accent2: #a78bfa;
+    --accent-glow: rgba(124,106,247,0.15);
+    --green: #34d399;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--accent2);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO (with About Me merged in) ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    align-items: center;
+    gap: 5rem;
+    padding: 8rem 2.5rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── CONSTELLATION BACKGROUND ── */
+  #particles {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+
+  .grid-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(124,106,247,.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,106,247,.018) 1px, transparent 1px);
+    background-size: 56px 56px;
+    pointer-events: none;
+    animation: gridPan 40s linear infinite;
+  }
+  @keyframes gridPan {
+    from { background-position: 0 0; }
+    to   { background-position: 56px 56px; }
+  }
+
+  .scan {
+    position: fixed; inset: 0; z-index: 9990;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,.018) 2px, rgba(0,0,0,.018) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* Status badge */
+  .hero-status {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: rgba(124,106,247,0.1);
+    border: 1px solid rgba(124,106,247,0.28);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    margin-bottom: 1.8rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .hero-sep { color: rgba(124,106,247,0.4); }
+  #live-time { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* Name block */
+  .hero-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .hero-greeting {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    font-weight: 400;
+    color: var(--muted);
+    line-height: 1.2;
+  }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+  }
+
+  /* About Me text directly on hero */
+  .hero-about {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 480px;
+    margin-bottom: 1.8rem;
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  /* Skills */
+  .skills-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .skill-pill {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    padding: 5px 13px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  /* CTAs */
+  .hero-cta { display: flex; gap: 0.85rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.7rem 1.6rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover { background: #6b58e8; transform: translateY(-1px); }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent;
+    color: var(--text);
+    padding: 0.7rem 1.6rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-secondary:hover { background: var(--bg3); border-color: var(--accent); }
+
+  /* Right avatar */
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .avatar-ring {
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--accent), var(--green));
+  }
+
+  .avatar-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: var(--bg3);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+  }
+
+  .avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+
+  .open-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  /* ── SECTION WRAPPERS ── */
+  .section-outer {
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-outer.purple-bg {
+    background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(124,106,247,0.09) 0%, transparent 70%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-outer.purple-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .section-outer.green-bg {
+    background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(52,211,153,0.07) 0%, transparent 70%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-outer.green-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  section {
+    padding: 5.5rem 2.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .section-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-bottom: 0.6rem;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 0.9rem;
+    max-width: 460px;
+    margin-bottom: 2.8rem;
+    font-weight: 300;
+  }
+
+  /* ── SCRIPT CARDS ── */
+  .scripts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.1rem;
+  }
+
+  .script-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+
+  .script-card:hover {
+    border-color: rgba(124,106,247,0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.45);
+  }
+
+  /* GIF card thumb with hover blur + button */
+  .card-thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-top: 56.25%;
+    overflow: hidden;
+    background: #0a0a0a;
+  }
+
+  .card-thumb img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: filter 0.35s ease, transform 0.35s ease;
+  }
+
+  .card-thumb:hover img {
+    filter: blur(4px) brightness(0.6);
+    transform: scale(1.04);
+  }
+
+  .card-thumb-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .card-thumb:hover .card-thumb-overlay {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .yt-hover-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.95);
+    color: #000;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 9px 20px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
+    transform: translateY(8px);
+    transition: transform 0.3s ease, background 0.2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  .card-thumb:hover .yt-hover-btn {
+    transform: translateY(0);
+  }
+
+  .yt-hover-btn:hover { background: #fff; }
+
+  .yt-dot {
+    width: 8px; height: 8px;
+    background: #ff0000;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Placeholder for cards without video */
+  .gif-placeholder {
+    width: 100%;
+    padding-top: 56.25%;
+    background: var(--bg3);
+    position: relative;
+  }
+
+  .gif-placeholder-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 8px;
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .gif-placeholder-inner .big-icon { font-size: 2.2rem; opacity: 0.3; }
+
+  .card-body { padding: 1.1rem 1.2rem 1.2rem; }
+
+  .card-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-bottom: 0.85rem;
+    font-weight: 300;
+  }
+
+  .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .tag {
+    font-size: 0.67rem;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 100px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+  }
+
+  /* ── BUILDS ── */
+  .builds-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.1rem;
+  }
+
+  .build-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+
+  .build-card:hover {
+    border-color: rgba(52,211,153,0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.45);
+  }
+
+  .build-img-wrap {
+    position: relative;
+    width: 100%; height: 190px;
+    overflow: hidden;
+    background: var(--bg3);
+  }
+
+  .build-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .build-card:hover .build-img-wrap img { transform: scale(1.05); }
+
+  .build-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.25s;
+  }
+
+  .build-card:hover .build-overlay { background: rgba(0,0,0,0.5); }
+
+  .build-view-btn {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.22s;
+    background: rgba(255,255,255,0.93);
+    color: #000;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 7px 18px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .build-card:hover .build-view-btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .build-body { padding: 0.9rem 1.1rem 1rem; }
+
+  .build-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+
+  .build-meta { font-size: 0.75rem; color: var(--muted); }
+
+  /* ── CONTACT ── */
+  .contact-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-wrap::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 55% 55% at 50% 0%, rgba(124,106,247,0.1), transparent);
+    pointer-events: none;
+  }
+
+  .contact-wrap h2 { margin-bottom: 0.5rem; }
+  .contact-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; font-weight: 300; }
+
+  .socials { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+
+  .social-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg3);
+    color: var(--text);
+    border: 1px solid var(--border2);
+    padding: 0.65rem 1.4rem;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .social-btn:hover { border-color: var(--accent); background: var(--accent-glow); color: var(--accent2); }
+
+  .divider { border: none; border-top: 1px solid var(--border); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.8rem 2.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+    position: relative; z-index: 1;
+  }
+  footer a { color: var(--accent2); text-decoration: none; }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox.active { display: flex; }
+
+  .lightbox-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    animation: fadeIn 0.25s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes zoomIn { from { opacity: 0; transform: scale(0.88); } to { opacity: 1; transform: scale(1); } }
+
+  .lightbox-content {
+    position: relative;
+    z-index: 1;
+    max-width: 90vw;
+    max-height: 88vh;
+    animation: zoomIn 0.28s cubic-bezier(0.34,1.56,0.64,1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .lightbox-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+    object-fit: contain;
+  }
+
+  .lightbox-caption {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 36px; height: 36px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 1rem;
+    transition: all 0.2s;
+    z-index: 2;
+  }
+
+  .lightbox-close:hover { background: var(--card); color: var(--text); }
+
+  /* ── PAGE LOAD / HERO ANIMATIONS (class-based for replay) ── */
+  .hero-left > * {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  .hero-right {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  /* When hero is visible, animate children in */
+  .hero-left.hero-in > *:nth-child(1) { animation: heroFadeUp 0.7s ease 0.10s forwards; }
+  .hero-left.hero-in > *:nth-child(2) { animation: heroFadeUp 0.7s ease 0.20s forwards; }
+  .hero-left.hero-in > *:nth-child(3) { animation: heroFadeUp 0.7s ease 0.30s forwards; }
+  .hero-left.hero-in > *:nth-child(4) { animation: heroFadeUp 0.7s ease 0.42s forwards; }
+  .hero-left.hero-in > *:nth-child(5) { animation: heroFadeUp 0.7s ease 0.54s forwards; }
+  .hero-left.hero-in > *:nth-child(6) { animation: heroFadeUp 0.7s ease 0.65s forwards; }
+  .hero-right.hero-in                 { animation: heroFadeUp 0.8s ease 0.35s forwards; }
+
+  /* Slide DOWN variant — when hero re-enters from scrolling back up */
+  .hero-left.hero-in.from-below > *:nth-child(1) { animation: heroFadeDown 0.7s ease 0.10s forwards; }
+  .hero-left.hero-in.from-below > *:nth-child(2) { animation: heroFadeDown 0.7s ease 0.20s forwards; }
+  .hero-left.hero-in.from-below > *:nth-child(3) { animation: heroFadeDown 0.7s ease 0.30s forwards; }
+  .hero-left.hero-in.from-below > *:nth-child(4) { animation: heroFadeDown 0.7s ease 0.42s forwards; }
+  .hero-left.hero-in.from-below > *:nth-child(5) { animation: heroFadeDown 0.7s ease 0.54s forwards; }
+  .hero-left.hero-in.from-below > *:nth-child(6) { animation: heroFadeDown 0.7s ease 0.65s forwards; }
+  .hero-right.hero-in.from-below                 { animation: heroFadeDown 0.8s ease 0.35s forwards; }
+
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes heroFadeDown {
+    from { opacity: 0; transform: translateY(-28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* NAV load — one-time only */
+  nav {
+    opacity: 0;
+    animation: navDrop 0.5s ease 0.05s forwards;
+  }
+  @keyframes navDrop {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SCROLL REVEAL — JS controls direction via inline styles ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+
+  /* ── LIGHTBOX CLOSE BLUR-OUT ── */
+  @keyframes blurOut {
+    0%   { opacity: 1; filter: blur(0px) brightness(1); transform: scale(1); }
+    100% { opacity: 0; filter: blur(20px) brightness(0.3); transform: scale(1.06); }
+  }
+  @keyframes backdropOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+  .lightbox.closing .lightbox-content { animation: blurOut 0.35s ease forwards; }
+  .lightbox.closing .lightbox-backdrop { animation: backdropOut 0.35s ease forwards; }
+
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1100px) {
+    .scripts-grid { grid-template-columns: repeat(3, 1fr); }
+    .builds-grid  { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 860px) {
+    .hero {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: 3rem;
+      padding-top: 6rem;
+    }
+    .hero-right { order: -1; }
+    .hero-about { margin-left: auto; margin-right: auto; }
+    .skills-list { justify-content: center; }
+    .hero-cta { justify-content: center; }
+    .avatar-ring { width: 220px; height: 220px; }
+    .scripts-grid { grid-template-columns: 1fr 1fr; }
+    .builds-grid  { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 560px) {
+    .nav-links { display: none; }
+    section { padding: 3.5rem 1.5rem; }
+    .scripts-grid { grid-template-columns: 1fr; }
+    .builds-grid  { grid-template-columns: 1fr; }
+    .contact-wrap { padding: 2rem 1.5rem; }
+    .hero { padding: 6rem 1.5rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CONSTELLATION BACKGROUND -->
+<canvas id="particles"></canvas>
+<div class="grid-bg"></div>
+<div class="scan"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">DeadEyeZJhin</a>
+  <ul class="nav-links">
+    <li><a href="#scripts">Projects</a></li>
+    <li><a href="#builds">Builds</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO + ABOUT ME (merged) -->
+<div class="hero">
+
+  <div class="hero-left">
+
+    <!-- Live status badge -->
+    <div class="hero-status">
+      <span class="status-dot"></span>
+      Online
+      <span class="hero-sep">•</span>
+      Developer
+      <span class="hero-sep">•</span>
+      <span id="live-time">--:--</span>
+      <span style="color:rgba(167,139,250,0.5); font-size:0.68rem; margin-left:-4px">GMT+8</span>
+    </div>
+
+    <div class="hero-label">DEADEYEZJHIN.DEV</div>
+    <div class="hero-greeting">Hey, I'm</div>
+    <div class="hero-name">DeadEyeZJhin</div>
+
+    <!-- About Me text right here on the first page -->
+    <p class="hero-about">
+      I'm a Roblox Studio Developer based in the Philippines. I build immersive gameplay systems and realistic builds — from cooking mechanics and NPC AI to interactive props. I also share my dev work on YouTube.
+      <br><br>
+      Currently open to commissions and collaborations.
+    </p>
+
+    <!-- Skills -->
+    <div class="skills-list">
+      <span class="skill-pill">Roblox Lua</span>
+      <span class="skill-pill">Roblox Studio</span>
+      <span class="skill-pill">Game Systems</span>
+      <span class="skill-pill">UI Design</span>
+      <span class="skill-pill">3D Building</span>
+      <span class="skill-pill">YouTube</span>
+    </div>
+
+    <!-- CTAs -->
+    <div class="hero-cta">
+      <a href="#scripts" class="btn-primary">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+        View My Work
+      </a>
+      <a href="#contact" class="btn-secondary">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Hire Me
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Avatar right side -->
+  <div class="hero-right">
+    <div class="avatar-ring">
+      <div class="avatar-inner">
+        <img src="avatar.png" alt="DeadEyeZJhin">
+      </div>
+    </div>
+    <div class="open-chip">
+      <span class="status-dot"></span>
+      Open for commissions
+    </div>
+  </div>
+
+</div>
+
+<!-- ── SCRIPTS SECTION ── -->
+<div class="section-outer purple-bg">
+  <section id="scripts">
+    <div class="section-eyebrow reveal">Past Works</div>
+    <h2 class="reveal">Featured Projects</h2>
+    <p class="section-sub reveal">Roblox Lua systems built for immersive gameplay. Click any card to watch on YouTube.</p>
+
+    <div class="scripts-grid">
+
+      <!-- CHOP TREE -->
+      <div class="script-card reveal">
+        <a class="card-thumb" href="https://youtu.be/7B9QgPXYDtU" target="_blank">
+          <img src="chop-tree.gif" alt="Chop Tree System">
+          <div class="card-thumb-overlay">
+            <span class="yt-hover-btn">
+              <span class="yt-dot"></span>
+              Watch on YouTube
+            </span>
+          </div>
+        </a>
+        <div class="card-body">
+          <div class="card-eyebrow">Featured System</div>
+          <div class="card-title">Chop Tree System</div>
+          <div class="card-desc">A fully interactive tree chopping system with animations, resource drops, and respawn mechanics.</div>
+          <div class="card-tags">
+            <span class="tag">Gameplay</span><span class="tag">Resource</span><span class="tag">Animation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COOKING -->
+      <div class="script-card reveal">
+        <a class="card-thumb" href="https://youtu.be/96noZdzxYqU" target="_blank">
+          <img src="cooking.gif" alt="Cooking System">
+          <div class="card-thumb-overlay">
+            <span class="yt-hover-btn">
+              <span class="yt-dot"></span>
+              Watch on YouTube
+            </span>
+          </div>
+        </a>
+        <div class="card-body">
+          <div class="card-eyebrow">Featured System</div>
+          <div class="card-title">Cooking System</div>
+          <div class="card-desc">A recipe-based cooking system with ingredient combining, timers, and food stat effects.</div>
+          <div class="card-tags">
+            <span class="tag">Gameplay</span><span class="tag">UI</span><span class="tag">Stats</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NPC -->
+      <div class="script-card reveal">
+        <a class="card-thumb" href="https://youtu.be/uUwnDtL4ntU" target="_blank">
+          <img src="npc.gif" alt="NPC System">
+          <div class="card-thumb-overlay">
+            <span class="yt-hover-btn">
+              <span class="yt-dot"></span>
+              Watch on YouTube
+            </span>
+          </div>
+        </a>
+        <div class="card-body">
+          <div class="card-eyebrow">Featured System</div>
+          <div class="card-title">NPC System</div>
+          <div class="card-desc">Smart NPC with pathfinding, dialogue trees, and customizable AI behavior states.</div>
+          <div class="card-tags">
+            <span class="tag">AI</span><span class="tag">Dialogue</span><span class="tag">Pathfinding</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRAB SYSTEM -->
+      <div class="script-card reveal">
+        <a class="card-thumb" href="https://youtu.be/E1ArgJgmfoo" target="_blank">
+          <img src="grab.gif" alt="Grab System">
+          <div class="card-thumb-overlay">
+            <span class="yt-hover-btn">
+              <span class="yt-dot"></span>
+              Watch on YouTube
+            </span>
+          </div>
+        </a>
+        <div class="card-body">
+          <div class="card-eyebrow">Featured System</div>
+          <div class="card-title">Grab System</div>
+          <div class="card-desc">Lets players grab other players or objects with smooth physics and interaction handling.</div>
+          <div class="card-tags">
+            <span class="tag">Physics</span><span class="tag">Interaction</span><span class="tag">Multiplayer</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- HAND MOVEMENT -->
+      <div class="script-card reveal">
+        <a class="card-thumb" href="https://youtu.be/cY-rxrE1ce4" target="_blank">
+          <img src="hand.gif" alt="Hand Movement System">
+          <div class="card-thumb-overlay">
+            <span class="yt-hover-btn">
+              <span class="yt-dot"></span>
+              Watch on YouTube
+            </span>
+          </div>
+        </a>
+        <div class="card-body">
+          <div class="card-eyebrow">Featured System</div>
+          <div class="card-title">Hand Movement System</div>
+          <div class="card-desc">Control your avatar's arms and hands dynamically using your mouse pointer — RightUpperArm, RightLowerArm, RightHand.</div>
+          <div class="card-tags">
+            <span class="tag">Animation</span><span class="tag">IK</span><span class="tag">Mouse</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE SYSTEM -->
+      <div class="script-card reveal">
+        <a class="card-thumb" href="https://youtu.be/n4NX2UBG8FE" target="_blank">
+          <img src="Interactive.gif" alt="Interactive System">
+          <div class="card-thumb-overlay">
+            <span class="yt-hover-btn">
+              <span class="yt-dot"></span>
+              Watch on YouTube
+            </span>
+          </div>
+        </a>
+        <div class="card-body">
+          <div class="card-eyebrow">Featured System</div>
+          <div class="card-title">Interactive System</div>
+          <div class="card-desc">Press E to trigger interactions — equip a push cart, carry buckets on a shoulder stick, or enter a coffin. 3 unique interactions.</div>
+          <div class="card-tags">
+            <span class="tag">Interaction</span><span class="tag">E-Key</span><span class="tag">Props</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ── BUILDS SECTION ── -->
+<div class="section-outer green-bg">
+  <section id="builds">
+    <div class="section-eyebrow reveal">Showcase</div>
+    <h2 class="reveal">Builds Gallery</h2>
+    <p class="section-sub reveal">Realistic Roblox Studio builds — pure architecture and aesthetics. Click to view full image.</p>
+
+    <div class="builds-grid">
+
+      <div class="build-card reveal" onclick="openLightbox('build1.png','Realism')" style="cursor:pointer;">
+        <div class="build-img-wrap">
+          <img src="build1.png" alt="Realism">
+          <div class="build-overlay">
+            <span class="build-view-btn">View Image ↗</span>
+          </div>
+        </div>
+        <div class="build-body">
+          <div class="build-title">Realism</div>
+          <div class="build-meta">Realistic · Roblox Studio</div>
+        </div>
+      </div>
+
+      <div class="build-card reveal" onclick="openLightbox('build2.png','Realistic Furniture')" style="cursor:pointer;">
+        <div class="build-img-wrap">
+          <img src="build2.png" alt="Realistic Furniture">
+          <div class="build-overlay">
+            <span class="build-view-btn">View Image ↗</span>
+          </div>
+        </div>
+        <div class="build-body">
+          <div class="build-title">Realistic Furniture</div>
+          <div class="build-meta">Realistic · Roblox Studio</div>
+        </div>
+      </div>
+
+      <div class="build-card reveal" onclick="openLightbox('build3.png','Realistic Houses')" style="cursor:pointer;">
+        <div class="build-img-wrap">
+          <img src="build3.png" alt="Realistic Houses">
+          <div class="build-overlay">
+            <span class="build-view-btn">View Image ↗</span>
+          </div>
+        </div>
+        <div class="build-body">
+          <div class="build-title">Realistic Houses</div>
+          <div class="build-meta">Realistic · Roblox Studio</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+  <div class="lightbox-content">
+    <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="">
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ── CONTACT ── -->
+<section id="contact" style="max-width:1100px; margin:0 auto; padding:5rem 2.5rem; position:relative; z-index:1;">
+  <div class="contact-wrap">
+    <div class="section-eyebrow" style="text-align:center; margin-bottom:0.5rem" class="reveal">Get In Touch</div>
+    <h2 class="reveal">Let's Work Together</h2>
+    <p class="contact-sub reveal">Looking to commission a system or build? Reach out on any platform.</p>
+    <div class="socials">
+      <a href="https://www.youtube.com/@DeadEyeZJhinBRUH" target="_blank" class="social-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.2 31.2 0 000 12a31.2 31.2 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.2 31.2 0 0024 12a31.2 31.2 0 00-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+        YouTube
+      </a>
+      <a href="https://discord.gg/yjwMz3FTtS" target="_blank" class="social-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.4A19.7 19.7 0 0015.4 3a13.6 13.6 0 00-.6 1.3 18.3 18.3 0 00-5.5 0A13.8 13.8 0 008.6 3 19.8 19.8 0 003.7 4.4C.5 9.2-.3 13.8.1 18.4a20 20 0 006 3 14.8 14.8 0 001.3-2.1 12.9 12.9 0 01-2-.9l.5-.4a14.3 14.3 0 0012.2 0l.5.4a12.8 12.8 0 01-2 1 14.6 14.6 0 001.3 2 19.9 19.9 0 006-3c.5-5.2-.8-9.7-3.6-13.9zM8 15.5c-1.2 0-2.1-1.1-2.1-2.4s.9-2.4 2.1-2.4 2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4zm8 0c-1.2 0-2.1-1.1-2.1-2.4s.9-2.4 2.1-2.4 2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4z"/></svg>
+        Discord
+      </a>
+      <a href="https://www.roblox.com/users/686562757/profile" target="_blank" class="social-btn">🎮 Roblox</a>
+      <a href="https://www.facebook.com/DeadEyeZJhinBRUH" target="_blank" class="social-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.88v2.27h3.32l-.53 3.5h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+        Facebook
+      </a>
+      <a href="banner.html" class="social-btn" style="border-color:rgba(124,106,247,0.4); color:var(--accent2);">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Banner Card
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Built with ♥ by <a href="https://www.youtube.com/@DeadEyeZJhinBRUH">DeadEyeZJhin</a> · Roblox Studio Developer
+</footer>
+
+<script>
+  /* ══════════════════════════════════════════════
+     BACKGROUND: Constellation Web + Warp Trails
+     ══════════════════════════════════════════════ */
+  const canvas = document.getElementById('particles');
+  const ctx    = canvas.getContext('2d');
+  let W = window.innerWidth, H = window.innerHeight;
+  canvas.width = W; canvas.height = H;
+
+  /* ── mouse ── */
+  let mouseX = W / 2, mouseY = H / 2;
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+  /* ── node class ── */
+  const NODE_COUNT   = 110;
+  const CONNECT_DIST = 130;
+  const MOUSE_REPEL  = 120;
+
+  class Node {
+    constructor() { this.reset(); }
+    reset() {
+      this.x  = Math.random() * W;
+      this.y  = Math.random() * H;
+      this.ox = this.x; this.oy = this.y;
+      this.vx = (Math.random() - .5) * .35;
+      this.vy = (Math.random() - .5) * .35;
+      this.r  = Math.random() * 1.6 + .5;
+      this.baseAlpha = Math.random() * .38 + .10;
+      this.alpha = this.baseAlpha;
+      this.pulseSpeed = Math.random() * .02 + .005;
+      this.pulsePhase = Math.random() * Math.PI * 2;
+      this.trail = [];
+      this.trailLen = Math.floor(Math.random() * 8 + 4);
+      this.col = Math.random() < .75 ? '124,106,247' : '167,139,250';
+    }
+    update(t) {
+      this.trail.push({x: this.x, y: this.y});
+      if (this.trail.length > this.trailLen) this.trail.shift();
+      const dx = this.x - mouseX, dy = this.y - mouseY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < MOUSE_REPEL && dist > 0) {
+        const force = (MOUSE_REPEL - dist) / MOUSE_REPEL * .6;
+        this.vx += (dx / dist) * force * .08;
+        this.vy += (dy / dist) * force * .08;
+      }
+      this.vx += (this.ox - this.x) * .0003;
+      this.vy += (this.oy - this.y) * .0003;
+      this.vx *= .985; this.vy *= .985;
+      this.x += this.vx; this.y += this.vy;
+      if (this.x < -20) this.x = W + 20;
+      if (this.x > W+20) this.x = -20;
+      if (this.y < -20) this.y = H + 20;
+      if (this.y > H+20) this.y = -20;
+      this.alpha = this.baseAlpha + Math.sin(t * this.pulseSpeed + this.pulsePhase) * .18;
+    }
+    draw() {
+      const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 4);
+      grd.addColorStop(0, `rgba(${this.col},${this.alpha})`);
+      grd.addColorStop(1, `rgba(${this.col},0)`);
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r * 4, 0, Math.PI * 2);
+      ctx.fillStyle = grd; ctx.fill();
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${this.col},${Math.min(this.alpha + .3, 1)})`; ctx.fill();
+    }
+    drawTrail() {
+      if (this.trail.length < 2) return;
+      ctx.beginPath();
+      ctx.moveTo(this.trail[0].x, this.trail[0].y);
+      for (let i = 1; i < this.trail.length; i++) ctx.lineTo(this.trail[i].x, this.trail[i].y);
+      ctx.strokeStyle = `rgba(${this.col}, ${this.alpha * .25})`;
+      ctx.lineWidth = this.r * .6; ctx.lineCap = 'round'; ctx.stroke();
+    }
+  }
+
+  /* ── warp streaks ── */
+  const warps = [];
+  class Warp {
+    constructor() {
+      this.x = Math.random() * W; this.y = Math.random() * H;
+      const angle = Math.random() * Math.PI * 2, spd = Math.random() * 3 + 2;
+      this.vx = Math.cos(angle) * spd; this.vy = Math.sin(angle) * spd;
+      this.life = 1; this.decay = Math.random() * .02 + .015;
+      this.len = Math.random() * 30 + 10;
+      this.col = Math.random() < .6 ? '124,106,247' : '167,139,250';
+    }
+    update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; }
+    draw() {
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(this.x - this.vx * (this.len / 4), this.y - this.vy * (this.len / 4));
+      ctx.strokeStyle = `rgba(${this.col}, ${this.life * .22})`; ctx.lineWidth = .8; ctx.stroke();
+    }
+    dead() { return this.life <= 0 || this.x < 0 || this.x > W || this.y < 0 || this.y > H; }
+  }
+
+  setInterval(() => { if (warps.length < 12) warps.push(new Warp()); }, 400);
+
+  /* ── init nodes ── */
+  const nodes = Array.from({length: NODE_COUNT}, () => new Node());
+
+  /* ── resize ── */
+  function resizeCanvas() {
+    const oldW = W, oldH = H;
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    const scaleX = W / oldW, scaleY = H / oldH;
+    nodes.forEach(n => {
+      n.x  *= scaleX; n.y  *= scaleY;
+      n.ox *= scaleX; n.oy *= scaleY;
+      n.trail = [];
+      const spd = Math.sqrt(n.vx*n.vx + n.vy*n.vy);
+      if (spd > .6) { n.vx = n.vx / spd * .6; n.vy = n.vy / spd * .6; }
+    });
+    mouseX = W / 2; mouseY = H / 2;
+  }
+  window.addEventListener('resize', resizeCanvas);
+
+  /* ── main loop ── */
+  let t = 0;
+  function constellationLoop() {
+    ctx.clearRect(0, 0, W, H);
+    t++;
+    nodes.forEach(n => { n.update(t); n.drawTrail(); });
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < CONNECT_DIST) {
+          const a = (1 - d / CONNECT_DIST) * .13;
+          const grad = ctx.createLinearGradient(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+          grad.addColorStop(0, `rgba(${nodes[i].col},${a})`);
+          grad.addColorStop(1, `rgba(${nodes[j].col},${a})`);
+          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = grad; ctx.lineWidth = (1 - d / CONNECT_DIST) * 1.2; ctx.stroke();
+        }
+      }
+      const mdx = nodes[i].x - mouseX, mdy = nodes[i].y - mouseY;
+      const md = Math.sqrt(mdx*mdx + mdy*mdy);
+      if (md < CONNECT_DIST * 1.4) {
+        const a = (1 - md / (CONNECT_DIST * 1.4)) * .15;
+        ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(mouseX, mouseY);
+        ctx.strokeStyle = `rgba(124,106,247,${a})`; ctx.lineWidth = .5; ctx.stroke();
+      }
+    }
+    nodes.forEach(n => n.draw());
+    const mg = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 60);
+    mg.addColorStop(0, 'rgba(124,106,247,.08)'); mg.addColorStop(1, 'rgba(124,106,247,0)');
+    ctx.beginPath(); ctx.arc(mouseX, mouseY, 60, 0, Math.PI*2); ctx.fillStyle = mg; ctx.fill();
+    for (let i = warps.length - 1; i >= 0; i--) {
+      warps[i].update(); warps[i].draw();
+      if (warps[i].dead()) warps.splice(i, 1);
+    }
+    requestAnimationFrame(constellationLoop);
+  }
+  constellationLoop();
+
+  // ── LIVE CLOCK ──
+  function updateTime() {
+    const now = new Date();
+    const ph = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+    const h = String(ph.getHours()).padStart(2,'0');
+    const m = String(ph.getMinutes()).padStart(2,'0');
+    document.getElementById('live-time').textContent = h + ':' + m;
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+
+  // ── TRACK SCROLL DIRECTION ──
+  let lastScrollY = window.scrollY;
+  let scrollDir = 'down';
+  window.addEventListener('scroll', () => {
+    scrollDir = window.scrollY > lastScrollY ? 'down' : 'up';
+    lastScrollY = window.scrollY;
+  }, { passive: true });
+
+  // ── HERO REPLAY ──
+  const heroLeft  = document.querySelector('.hero-left');
+  const heroRight = document.querySelector('.hero-right');
+
+  function triggerHero(fromBelow) {
+    heroLeft.classList.remove('hero-in', 'from-below');
+    heroRight.classList.remove('hero-in', 'from-below');
+    void heroLeft.offsetWidth; // force reflow to restart animation
+    if (fromBelow) {
+      heroLeft.classList.add('from-below');
+      heroRight.classList.add('from-below');
+    }
+    heroLeft.classList.add('hero-in');
+    heroRight.classList.add('hero-in');
+  }
+
+  const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Coming from below (scrolling up) = slide down; from above = slide up
+        triggerHero(scrollDir === 'up');
+      } else {
+        heroLeft.classList.remove('hero-in', 'from-below');
+        heroRight.classList.remove('hero-in', 'from-below');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  heroObserver.observe(document.querySelector('.hero'));
+  triggerHero(false); // first load: always slide up
+
+  // ── SCROLL REVEAL (inline style approach — reliable direction control) ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const el = entry.target;
+
+      if (entry.isIntersecting) {
+        const fromAbove = scrollDir === 'up';
+
+        // Siblings for stagger order
+        const parent = el.parentElement;
+        const siblings = parent ? Array.from(parent.querySelectorAll('.reveal')) : [el];
+        const total = siblings.length;
+        const index = siblings.indexOf(el);
+        // Scrolling up → reverse stagger (last card animates first)
+        const staggerIndex = fromAbove ? (total - 1 - index) : index;
+        const delay = staggerIndex * 0.1;
+
+        // Step 1: snap to starting position (no transition)
+        el.style.transition = 'none';
+        el.style.opacity = '0';
+        el.style.transform = fromAbove ? 'translateY(-36px)' : 'translateY(36px)';
+
+        // Step 2: force browser to register starting state
+        void el.offsetWidth;
+
+        // Step 3: animate to final visible state
+        el.style.transition = `opacity 0.65s ease ${delay}s, transform 0.65s ease ${delay}s`;
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+
+      } else {
+        // Reset back to invisible, ready for next scroll
+        el.style.transition = 'none';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(36px)';
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ── LIGHTBOX ──
+  function openLightbox(src, caption) {
+    const lb = document.getElementById('lightbox');
+    lb.classList.remove('closing');
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-caption').textContent = caption + ' · Roblox Studio';
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    const lb = document.getElementById('lightbox');
+    lb.classList.add('closing');
+    setTimeout(() => {
+      lb.classList.remove('active', 'closing');
+      document.body.style.overflow = '';
+    }, 360);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+
+</body>
+</html>
