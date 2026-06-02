@@ -361,18 +361,7 @@
     box-shadow: 0 0 20px rgba(52,211,153,0.25), 0 8px 28px rgba(0,0,0,0.5);
   }
 
-  /* ── WATERMARK ── */
-  .watermark {
-    position: fixed; bottom: 48px; right: 68px;
-    font-size: 14px; color: rgba(167,139,250,0.55);
-    z-index: 2; letter-spacing: 0.05em;
-    font-family: 'DM Sans', sans-serif; font-weight: 500;
-    opacity: 0; animation: slideUp 0.6s ease 2s forwards;
-    text-shadow: 0 0 16px rgba(124,106,247,0.5);
-    background: rgba(10,10,15,0.4);
-    padding: 4px 12px; border-radius: 100px;
-    border: 1px solid rgba(124,106,247,0.2);
-  }
+  /* watermark drawn on canvas */
 </style>
 </head>
 <body>
@@ -482,7 +471,7 @@
   </div>
 </div>
 
-<div class="watermark">deadeyezjhin.github.io</div>
+<!-- watermark drawn on canvas -->
 
 <script>
 const W = 1920, H = 1080;
@@ -713,6 +702,55 @@ function constellationLoop() {
   }
 
   drawGlows(t);
+
+  // ── CANVAS WATERMARK (OBS-safe: drawn into pixels, always captured) ──
+  const WM_TEXT  = 'deadeyezjhin.github.io';
+  const WM_PAD_X = 18, WM_PAD_Y = 10;
+  const WM_X     = W - 16, WM_Y = H - 24; // true bottom-right corner, 16px from each edge
+  const WM_FADE_START = 120, WM_FADE_END = 180; // frames → fade in over ~1s after 2s delay
+  const wmAlpha  = t < WM_FADE_START ? 0 : Math.min(1, (t - WM_FADE_START) / (WM_FADE_END - WM_FADE_START));
+
+  if (wmAlpha > 0) {
+    ctx.save();
+    ctx.font = "500 14px 'DM Sans', sans-serif";
+    ctx.letterSpacing = '0.05em';
+    const tw = ctx.measureText(WM_TEXT).width;
+    const bx = WM_X - tw - WM_PAD_X * 2, by = WM_Y - 20, bw = tw + WM_PAD_X * 2, bh = 28;
+    const br = 14; // border-radius
+
+    // Pill background
+    ctx.globalAlpha = wmAlpha * 0.85;
+    ctx.fillStyle = 'rgba(10,10,15,0.55)';
+    ctx.beginPath();
+    ctx.roundRect(bx, by, bw, bh, br);
+    ctx.fill();
+
+    // Pill border
+    ctx.globalAlpha = wmAlpha * 0.45;
+    ctx.strokeStyle = 'rgba(124,106,247,0.5)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(bx, by, bw, bh, br);
+    ctx.stroke();
+
+    // Glow behind text
+    ctx.globalAlpha = wmAlpha * 0.35;
+    const wg = ctx.createRadialGradient(WM_X - tw/2 - WM_PAD_X, WM_Y - 6, 0, WM_X - tw/2 - WM_PAD_X, WM_Y - 6, tw * 0.8);
+    wg.addColorStop(0, 'rgba(124,106,247,0.6)');
+    wg.addColorStop(1, 'rgba(124,106,247,0)');
+    ctx.fillStyle = wg;
+    ctx.beginPath();
+    ctx.roundRect(bx, by, bw, bh, br);
+    ctx.fill();
+
+    // Text
+    ctx.globalAlpha = wmAlpha * 0.75;
+    ctx.fillStyle = 'rgba(167,139,250,1)';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(WM_TEXT, bx + WM_PAD_X, by + bh / 2);
+    ctx.restore();
+  }
+
   requestAnimationFrame(constellationLoop);
 }
 constellationLoop();
