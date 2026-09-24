@@ -452,12 +452,14 @@ h1,h2,h3,.kpi{font-family:var(--display);letter-spacing:-.01em}
   border-style:dashed;border-color:var(--stroke-strong);
   font:500 11.5px/1.5 var(--mono);color:var(--dim);padding:14px;text-align:center;
 }
-/* the office screen is landscape, so it gets a wider column and its own ratio */
-.shot.wide{width:430px}
-.shot.wide .frame{aspect-ratio:2080/1640;border-radius:14px;border-width:6px}
-.appsplit.wide{grid-template-columns:minmax(0,1fr) 430px}
+/* The office screen is a desktop screenshot: it needs WIDTH to stay readable, so it
+   takes the larger column and the words are squeezed into a fixed one beside it. */
+.appsplit.wide{grid-template-columns:330px minmax(0,1fr)}
+.shot.wide{width:100%}
+.shot.wide .frame{aspect-ratio:820/640;border-radius:12px;border-width:5px}
+.shot.wide .frame img{object-fit:fill}
 @media (max-width:1100px){.appsplit.wide{grid-template-columns:1fr}
-  .appsplit.wide .shot{width:min(430px,100%);margin:0 auto}}
+  .appsplit.wide .shot{width:100%;margin:0}}
 
 /* a wide screenshot of the office screen, no phone frame */
 .screenwide{border:1px solid var(--stroke);border-radius:var(--radius);overflow:hidden;
@@ -480,4 +482,23 @@ h1,h2,h3,.kpi{font-family:var(--display);letter-spacing:-.01em}
 }
 @media print{
   .appsplit{grid-template-columns:1fr .5fr;min-height:auto;page-break-inside:avoid}
+}
+
+
+/* ------------------------------------------------------------------
+   The office slide's screenshot.
+   `.appsplit .shot{width:248px}` is declared further up and has the same
+   specificity, so these have to be qualified to win. A desktop screenshot
+   needs WIDTH to stay readable: it takes the big column, the words take a
+   fixed one beside it.
+   ------------------------------------------------------------------ */
+.appsplit.wide{grid-template-columns:340px minmax(0,1fr);gap:30px}
+/* 845px keeps the capture at ~1:1, which is the point: any smaller and the office
+   screen stops being readable. 660px tall + caption clears the slide's 760px. */
+.appsplit .shot.wide{width:min(100%,845px);margin:0}
+.appsplit .shot.wide .frame{aspect-ratio:820/640;border-radius:12px;border-width:5px}
+.appsplit .shot.wide .frame img{object-fit:contain}
+@media (max-width:1100px){
+  .appsplit.wide{grid-template-columns:1fr}
+  .appsplit .shot.wide{width:100%;margin:0}
 }
