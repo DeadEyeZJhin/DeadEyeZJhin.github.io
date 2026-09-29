@@ -140,6 +140,33 @@
   .shot.phone{width:min(46%,210px);aspect-ratio:375/812;border-radius:22px;border:6px solid #1d1d28}
   .shot.wide{width:100%;aspect-ratio:16/10}
 
+  /* ── the network box: the live presentation, swipeable ── */
+  .case.net{grid-template-columns:1fr;gap:1.6rem}
+  .case.net .nums{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .case.net .ba{max-width:880px}
+  .netview{width:100%;max-width:1040px;margin:0 auto}
+  .nv-stage{position:relative;width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:#05070f;
+    border:1px solid var(--border2);box-shadow:0 20px 50px rgba(0,0,0,.5);outline:none}
+  .nv-stage:focus-visible{border-color:var(--accent)}
+  .nv-stage iframe{position:absolute;top:0;left:0;width:1280px;height:800px;border:0;transform-origin:0 0;pointer-events:none;
+    transition:opacity .35s}
+  .nv-stage.switching iframe{opacity:.15}
+  .nv-poster{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.82rem}
+  .nv-touch{position:absolute;inset:0;cursor:grab;touch-action:pan-y}
+  .nv-touch:active{cursor:grabbing}
+  .nv-arrow{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:1px solid var(--border2);
+    background:rgba(10,10,15,.72);color:var(--text);font-size:1.4rem;line-height:1;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;z-index:2}
+  .nv-arrow:hover{border-color:var(--accent);background:var(--accent)}
+  .nv-arrow.prev{left:10px} .nv-arrow.next{right:10px}
+  .nv-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:.7rem}
+  .nv-cap{font-size:.84rem;color:var(--muted);line-height:1.35;text-align:left}
+  .nv-cap b{display:block;color:var(--text);font-size:.92rem}
+  .nv-dots{display:flex;gap:6px;flex-shrink:0}
+  .nv-dots button{width:9px;height:9px;border-radius:50%;border:1px solid var(--border2);background:transparent;padding:0;cursor:pointer;transition:.25s}
+  .nv-dots button.on{background:var(--accent);border-color:var(--accent);width:22px;border-radius:5px}
+  .nv-hint{margin-top:.35rem;font-size:.74rem;color:var(--dim);text-align:left}
+  .nv-hint a{color:var(--accent2)}
+
   /* ── two phones, one role ── */
   .roles{display:inline-flex;gap:4px;padding:5px;background:rgba(20,20,28,.85);border:1px solid var(--border2);border-radius:14px;margin-bottom:.9rem;flex-wrap:wrap;justify-content:center}
   .roles button{font:600 .9rem 'DM Sans',sans-serif;color:var(--muted);background:transparent;border:0;border-radius:10px;padding:.6rem 1.1rem;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:8px}
@@ -215,7 +242,8 @@
   @media (max-width:1000px){
     .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
     .help{grid-template-columns:1fr 1fr}
-    .case,.case.flip{grid-template-columns:1fr}
+    .case,.case.flip,.case.net{grid-template-columns:1fr}
+    .case.net .nums{grid-template-columns:repeat(3,minmax(0,1fr))}
     .steps,.also{grid-template-columns:1fr 1fr}
   }
   @media (max-width:760px){
@@ -228,6 +256,8 @@
     .phones{grid-template-columns:1fr;gap:3rem}
     .ba{grid-template-columns:1fr}
     .nums{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .case.net .nums{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .nv-arrow{width:30px;height:30px;font-size:1.1rem}.nv-arrow.prev{left:6px}.nv-arrow.next{right:6px}
     .case{padding:1.3rem}
     .nav-cta{white-space:nowrap;padding:.45rem .8rem}
     .logo small{letter-spacing:.06em}
@@ -354,7 +384,7 @@
     </article>
 
     <!-- Networks -->
-    <article class="case reveal">
+    <article class="case net reveal">
       <div>
         <div class="who">IT support · two sites · each on its own fiber line</div>
         <h3>Office networks, set up and run remotely</h3>
@@ -377,7 +407,19 @@
         <div class="links"><a class="btn ghost" href="/pfsense-glinet-vlan-setup/" target="_blank" rel="noopener">Read the write-up ↗</a></div>
       </div>
       <div class="case-media">
-        <div class="shot wide" data-full="/pfsense-glinet-vlan-setup/assets/original-topology.png" data-cap="The network, before the rebuild"><img loading="lazy" src="/pfsense-glinet-vlan-setup/assets/original-topology.png" alt="Network topology" style="object-fit:contain;background:#fff"></div>
+        <div class="netview" id="netview">
+          <div class="nv-stage" tabindex="0" aria-label="Network presentation, swipe or use the arrows">
+            <div class="nv-poster"><span>Loading the live diagrams…</span></div>
+            <div class="nv-touch"></div>
+            <button class="nv-arrow prev" aria-label="Previous">‹</button>
+            <button class="nv-arrow next" aria-label="Next">›</button>
+          </div>
+          <div class="nv-bar">
+            <div class="nv-cap"><b id="nv-title">Site 1 — topology</b><span id="nv-sub">pfSense + managed switch, five VLANs</span></div>
+            <div class="nv-dots" id="nv-dots"></div>
+          </div>
+          <div class="nv-hint">Swipe or use the arrows · <a id="nv-open" href="/pfsense-glinet-vlan-setup/#5" target="_blank" rel="noopener">open this slide full size ↗</a></div>
+        </div>
       </div>
     </article>
   </div>
@@ -724,6 +766,91 @@
     setTimeout(() => { lb.classList.remove('active', 'closing'); document.body.style.overflow = ''; }, 340); };
   lb.querySelectorAll('[data-close]').forEach(x => x.addEventListener('click', close));
   addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+
+/* ═════════════════════════════════════════════════════════════
+   2b. THE NETWORK BOX
+   The network presentation lives on this same address, so it is shown here as it is,
+   animations and all, with its own buttons hidden. It turns by its own arrows, dots and
+   a swipe, and on its own every 9 s until someone touches it.
+   ═════════════════════════════════════════════════════════════ */
+(function(){
+  const DECK = '/pfsense-glinet-vlan-setup/';
+  const SLIDES = [
+    {n: 5,  t: 'Site 1 — topology',            s: 'pfSense + managed switch, five VLANs, 171 devices'},
+    {n: 7,  t: 'Site 2 — topology',            s: 'One OpenWrt router doing routing and VLANs'},
+    {n: 10, t: 'How the stack goes together',  s: 'Each device brought online before the next joins'},
+    {n: 13, t: 'What happens without VLANs',   s: 'One broadcast domain vs walls between groups'},
+    {n: 16, t: 'Same load, different queue',   s: 'Live: why calls and games stop lagging'},
+  ];
+  const box = document.getElementById('netview'); if (!box) return;
+  const stage = box.querySelector('.nv-stage'), dots = document.getElementById('nv-dots');
+  let i = 0, f = null, auto = null, touched = false;
+
+  SLIDES.forEach((sl, k) => {
+    const b = document.createElement('button'); b.setAttribute('aria-label', sl.t);
+    b.addEventListener('click', () => { stop(); show(k); }); dots.appendChild(b);
+  });
+  function fit(){ if (f) f.style.transform = 'scale(' + (stage.clientWidth / 1280) + ')'; }
+  function tidy(){
+    try {
+      const d = f.contentDocument; if (!d || d.getElementById('nv-tidy')) return;
+      const st = d.createElement('style'); st.id = 'nv-tidy';
+      st.textContent = '.topbar,.rail,.navarrows,.hint,.progress,.speaker{display:none!important}' +
+        '.slide{padding-top:26px!important;padding-bottom:18px!important;overflow:hidden!important}';
+      d.head.appendChild(st);
+    } catch (e) {}
+  }
+  function load(){
+    if (f) return;
+    try { localStorage.setItem('nt-deck', 'full'); localStorage.setItem('nt-theme', 'dark'); } catch (e) {}
+    f = document.createElement('iframe');
+    f.title = 'Network presentation'; f.tabIndex = -1; f.setAttribute('aria-hidden', 'true');
+    f.addEventListener('load', () => { tidy(); fit(); const p = stage.querySelector('.nv-poster'); if (p) p.remove(); });
+    f.src = DECK + '#' + SLIDES[i].n;
+    stage.insertBefore(f, stage.firstChild);
+    fit();
+  }
+  function show(k){
+    i = (k + SLIDES.length) % SLIDES.length;
+    const sl = SLIDES[i];
+    document.getElementById('nv-title').textContent = sl.t;
+    document.getElementById('nv-sub').textContent = sl.s;
+    document.getElementById('nv-open').href = DECK + '#' + sl.n;
+    [...dots.children].forEach((b, j) => b.classList.toggle('on', j === i));
+    if (!f) return;
+    stage.classList.add('switching');
+    setTimeout(() => {
+      try { f.contentWindow.location.hash = '#' + sl.n; } catch (e) { f.src = DECK + '#' + sl.n; }
+      tidy();
+      setTimeout(() => stage.classList.remove('switching'), 120);
+    }, 180);
+  }
+  function stop(){ touched = true; clearInterval(auto); }
+  box.querySelector('.prev').addEventListener('click', () => { stop(); show(i - 1); });
+  box.querySelector('.next').addEventListener('click', () => { stop(); show(i + 1); });
+  stage.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight'){ e.preventDefault(); stop(); show(i + 1); }
+    if (e.key === 'ArrowLeft'){ e.preventDefault(); stop(); show(i - 1); }
+  });
+  // swipe or drag, finger or mouse
+  const touch = box.querySelector('.nv-touch'); let x0 = null, y0 = 0;
+  touch.addEventListener('pointerdown', e => { x0 = e.clientX; y0 = e.clientY; });
+  addEventListener('pointerup', e => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){ stop(); show(i + (dx < 0 ? 1 : -1)); }
+  });
+  addEventListener('resize', fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(stage);
+  show(0);
+  // load it only when it comes near the screen, then turn on its own until touched
+  new IntersectionObserver((es, io) => {
+    if (es.some(e => e.isIntersecting)){
+      io.disconnect(); load();
+      auto = setInterval(() => { if (!touched && !document.hidden) show(i + 1); }, 9000);
+    }
+  }, {rootMargin: '300px'}).observe(box);
 })();
 
 /* ═════════════════════════════════════════════════════════════
