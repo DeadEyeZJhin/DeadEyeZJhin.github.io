@@ -150,7 +150,7 @@
   .nv-stage:focus-visible{border-color:var(--accent)}
   .nv-stage iframe{position:absolute;top:0;left:0;width:1280px;height:800px;border:0;transform-origin:0 0;pointer-events:none;
     transition:opacity .35s}
-  .nv-stage.switching iframe{opacity:.15}
+  .nv-stage.switching iframe{opacity:.55}
   .nv-poster{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.82rem}
   .nv-touch{position:absolute;inset:0;cursor:grab;touch-action:pan-y}
   .nv-touch:active{cursor:grabbing}
@@ -802,26 +802,27 @@
     const b = document.createElement('button'); b.setAttribute('aria-label', sl.t);
     b.addEventListener('click', () => { stop(); show(k); }); dots.appendChild(b);
   });
+  /* The presentation gets ONE size and keeps it: tall enough for the tallest of these
+     slides (the rack build, ~1250 px), as wide as the box's shape asks, shrunk to fill the
+     box edge to edge. Changing its size per slide re-drew its constellation on every
+     "next" (the flicker) and left black bars round the short slides. Each slide is centred
+     on that one background; the content is 1280 px at most, the stars fill the rest. */
+  const VH = 1340;
+  let VW = 0;
   function fit(){
-    if (!f) return;
-    let h = 800;
-    try {
-      const sl = f.contentDocument.querySelector('.slide.on');
-      if (sl){ f.style.height = '800px'; sl.scrollTop = 0; h = Math.max(800, Math.ceil(sl.scrollHeight) + 4); }
-    } catch (e) {}
-    f.style.height = h + 'px';
-    const k = Math.min(stage.clientWidth / 1280, stage.clientHeight / h);
-    f.style.transform = 'translate(' + Math.round((stage.clientWidth - 1280 * k) / 2) + 'px,' +
-      Math.round((stage.clientHeight - h * k) / 2) + 'px) scale(' + k + ')';
+    if (!f || !stage.clientWidth) return;
+    const w = Math.round(VH * stage.clientWidth / stage.clientHeight);
+    if (w !== VW){ VW = w; f.style.width = VW + 'px'; f.style.height = VH + 'px'; }
+    f.style.transform = 'scale(' + (stage.clientWidth / VW) + ')';
   }
-  // slides draw themselves in over a moment (the rack build grows): measure a few times
-  const refit = () => [0, 250, 700, 1500, 3000].forEach(ms => setTimeout(fit, ms));
+  const refit = fit;
   function tidy(){
     try {
       const d = f.contentDocument; if (!d || d.getElementById('nv-tidy')) return;
       const st = d.createElement('style'); st.id = 'nv-tidy';
       st.textContent = '.topbar,.rail,.navarrows,.hint,.progress,.speaker{display:none!important}' +
-        '.slide{padding-top:26px!important;padding-bottom:22px!important;scrollbar-width:none!important}.slide::-webkit-scrollbar{display:none}';
+        '.slide{padding-top:26px!important;padding-bottom:22px!important;scrollbar-width:none!important;' +
+        'display:flex!important;flex-direction:column;justify-content:safe center}.slide>*{width:100%}.slide::-webkit-scrollbar{display:none}';
       d.head.appendChild(st);
     } catch (e) {}
   }
@@ -926,10 +927,25 @@
      underneath; when that one has drawn itself it dissolves in and the old one goes.
      A second tap while one is still loading simply takes its place. */
   const pending = {suki: null, winter: null}, NAMES = {customer: 'Customer', agent: 'Field staff', office: 'Office'};
+  // the Winter demo's invented people (winter-services-deck/demo-src/fake-server.js)
+  const WINTER_PEOPLE = {
+    office: {id: 'd0000000-0000-4000-8000-00000000a001', email: 'office@demo.winter',  role: 'admin',      tab: 'inbox'},
+    tech:   {id: 'd0000000-0000-4000-8000-00000000a002', email: 'jun@demo.winter',     role: 'technician', tab: 'jobs'},
+    cust:   {id: 'd0000000-0000-4000-8000-00000000a004', email: 'carmela@demo.winter', role: 'customer',   tab: 'inbox'},
+  };
+  function winterAs(who){
+    const q = WINTER_PEOPLE[who]; if (!q) return;
+    try {
+      localStorage.setItem('ws_session', JSON.stringify({access_token: 'demo.' + q.id, refresh_token: 'demo-refresh.' + q.id,
+        expires_at: Date.now() + 365 * 864e5, email: q.email, uid: q.id, role: q.role}));
+      localStorage.setItem('wsdemo_as', who);
+      const ui = JSON.parse(localStorage.getItem('ws_ui') || 'null'); if (ui){ ui.tab = q.tab; localStorage.setItem('ws_ui', JSON.stringify(ui)); }
+    } catch (e) {}
+  }
   function load(which){
     const dev = document.getElementById('dev-' + which), scr = dev.querySelector('.screen');
     const want = role, r = ROLES[want][which];
-    const src = which === 'suki' ? SUKI + '?r=' + r.role : WINTER + '?as=' + r.as;
+    const src = which === 'suki' ? SUKI + '?r=' + r.role : WINTER + '?p=' + r.as;
     if (pending[which]) pending[which].remove();
     const old = live[which], poster = scr.querySelector('.poster');
     (old || poster) && (old || poster).classList.add('waiting');
@@ -941,7 +957,10 @@
     nf.className = 'incoming';
     pending[which] = nf;
     let retried = false, done = false;
-    const setRole = () => { if (which === 'suki'){ try { localStorage.setItem('or_role', JSON.stringify(r.role)); } catch (e) {} } };
+    const setRole = () => {
+      if (which === 'suki'){ try { localStorage.setItem('or_role', JSON.stringify(r.role)); } catch (e) {} }
+      else winterAs(r.as);
+    };
     function reveal(){
       if (done || pending[which] !== nf) return;
       done = true; hideStrip(nf);
