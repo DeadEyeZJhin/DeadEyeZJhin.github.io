@@ -182,14 +182,25 @@
     box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 70px rgba(0,0,0,.6),0 0 60px rgba(124,106,247,.12);transition:box-shadow .4s}
   .device.flash{box-shadow:0 0 0 2px var(--accent),0 30px 70px rgba(0,0,0,.6),0 0 70px rgba(124,106,247,.45)}
   .screen{position:relative;width:292px;height:640px;border-radius:33px;overflow:hidden;background:#0d0d14}
-  .screen iframe{position:absolute;top:0;left:0;width:375px;height:822px;border:0;transform:scale(.7787);transform-origin:0 0;background:#0d0d14}
+  .screen iframe{position:absolute;top:0;left:0;width:375px;height:822px;border:0;transform:scale(.7787);transform-origin:0 0;background:#0d0d14;
+    transition:opacity .6s ease,filter .5s ease;z-index:1}
+  /* the next role loads underneath, invisible; it dissolves in over the blurred one once drawn */
+  .screen iframe.incoming{opacity:0;pointer-events:none;z-index:2}
+  .screen iframe.incoming.shown{opacity:1}
+  .screen iframe.waiting,.poster.waiting{filter:blur(7px) brightness(.62) saturate(.8)}
+  .poster{transition:filter .5s ease,opacity .6s ease}
+  .poster.gone{opacity:0}
   .poster{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;padding:0 18px 26px;z-index:2;
     background-size:cover;background-position:top;cursor:pointer}
   .poster::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,15,.05) 30%,rgba(10,10,15,.92))}
   .poster > *{position:relative}
   .poster small{color:var(--muted);font-size:.74rem}
-  .loading{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(10,10,15,.6);z-index:2;font-size:.82rem;color:var(--accent2)}
-  .device.busy .loading{display:flex}
+  .loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.92);z-index:4;display:flex;align-items:center;gap:9px;
+    padding:9px 16px;border-radius:999px;background:rgba(10,10,15,.78);border:1px solid rgba(124,106,247,.45);backdrop-filter:blur(8px);
+    font-size:.8rem;font-weight:600;color:var(--text);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s ease}
+  .loading::before{content:'';width:13px;height:13px;border-radius:50%;border:2px solid rgba(167,139,250,.3);border-top-color:var(--accent2);animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .device.busy .loading{opacity:1;transform:translate(-50%,-50%) scale(1)}
   .ph .does{margin-top:1rem;font-size:.86rem;color:var(--muted);text-align:center;max-width:320px;min-height:4.2em;line-height:1.5}
   .ph .does b{color:var(--text)}
   .demo-foot{text-align:center;color:var(--dim);font-size:.8rem;margin-top:2rem}
@@ -910,29 +921,59 @@
       }
     } catch (e) {}
   }
+  /* Switching role never shows a black screen. The phone keeps what it shows, blurred,
+     with "Switching to …" on top; the new role loads in a second, invisible frame
+     underneath; when that one has drawn itself it dissolves in and the old one goes.
+     A second tap while one is still loading simply takes its place. */
+  const pending = {suki: null, winter: null}, NAMES = {customer: 'Customer', agent: 'Field staff', office: 'Office'};
   function load(which){
-    const dev = document.getElementById('dev-' + which), scr = dev.querySelector('.screen'), r = ROLES[role][which];
-    if (which === 'suki'){ try { localStorage.setItem('or_role', JSON.stringify(r.role)); } catch (e) {} }
+    const dev = document.getElementById('dev-' + which), scr = dev.querySelector('.screen');
+    const want = role, r = ROLES[want][which];
     const src = which === 'suki' ? SUKI + '?r=' + r.role : WINTER + '?as=' + r.as;
-    let f = live[which];
+    if (pending[which]) pending[which].remove();
+    const old = live[which], poster = scr.querySelector('.poster');
+    (old || poster) && (old || poster).classList.add('waiting');
+    scr.querySelector('.loading').textContent = old ? 'Switching to ' + NAMES[want] + '…' : 'Opening the live app…';
     dev.classList.add('busy');
-    if (!f){
-      f = document.createElement('iframe');
-      f.title = which === 'suki' ? 'SukiRun live demo' : 'Winter Services live demo';
-      f.addEventListener('load', () => {
-        hideStrip(f); setTimeout(() => hideStrip(f), 500); dev.classList.remove('busy');
-        // SukiRun's very first open loads its invented data and lands on the role menu:
-        // put the role back and open it once more
-        if (which === 'suki') setTimeout(() => {
-          const want = JSON.stringify(ROLES[role].suki.role);
-          let now = null; try { now = localStorage.getItem('or_role'); } catch (e) {}
-          if (now !== want && !f.dataset.retried){ f.dataset.retried = '1'; load('suki'); }
-        }, 900);
-      });
-      scr.appendChild(f); live[which] = f;
-      const p = scr.querySelector('.poster'); if (p) p.remove();
+
+    const nf = document.createElement('iframe');
+    nf.title = which === 'suki' ? 'SukiRun live demo' : 'Winter Services live demo';
+    nf.className = 'incoming';
+    pending[which] = nf;
+    let retried = false, done = false;
+    const setRole = () => { if (which === 'suki'){ try { localStorage.setItem('or_role', JSON.stringify(r.role)); } catch (e) {} } };
+    function reveal(){
+      if (done || pending[which] !== nf) return;
+      done = true; hideStrip(nf);
+      nf.classList.add('shown');
+      if (poster) poster.classList.add('gone');
+      dev.classList.remove('busy');
+      setTimeout(() => {
+        if (pending[which] !== nf) return;
+        if (old) old.remove();
+        if (poster) poster.remove();
+        nf.classList.remove('incoming', 'shown');
+        live[which] = nf; pending[which] = null;
+      }, 650);
     }
-    f.src = src;
+    nf.addEventListener('load', () => {
+      if (pending[which] !== nf) return;
+      let search = ''; try { search = nf.contentWindow.location.search; } catch (e) {}
+      if (which === 'winter' && /[?&]as=/.test(search)) return;   // it is still switching person: one more load
+      hideStrip(nf); setTimeout(() => hideStrip(nf), 300);
+      if (which === 'suki') setTimeout(() => {
+        // SukiRun's very first open loads its invented data and lands on the role menu:
+        // put the role back and open it once more, still out of sight
+        let now = null; try { now = localStorage.getItem('or_role'); } catch (e) {}
+        if (now !== JSON.stringify(r.role) && !retried){ retried = true; setRole(); nf.src = src; return; }
+        setTimeout(reveal, 250);
+      }, 450);
+      else setTimeout(reveal, 550);                              // let the screen draw before it shows
+    });
+    setRole();
+    scr.appendChild(nf);
+    nf.src = src;
+    setTimeout(reveal, 9000);                                    // never leave it blurred for good
     dev.classList.add('flash'); setTimeout(() => dev.classList.remove('flash'), 700);
   }
   function paint(){
@@ -947,10 +988,10 @@
   }
   function setRole(r, andLoad){
     role = r; paint();
-    ['suki', 'winter'].forEach(w => { if (live[w] || andLoad) load(w); });
+    ['suki', 'winter'].forEach(w => { if (live[w] || pending[w] || andLoad) load(w); });
   }
   document.querySelectorAll('.roles button').forEach(b => b.addEventListener('click', () => setRole(b.dataset.role)));
-  document.querySelectorAll('.poster').forEach(p => p.addEventListener('click', () => load(p.dataset.poster)));
+  document.querySelectorAll('.poster').forEach(p => p.addEventListener('click', () => { const w = p.dataset.poster; if (!live[w] && !pending[w]) load(w); }));
   // "Try it as…" buttons elsewhere on the page pick the role, then open both phones
   document.querySelectorAll('[data-jump]').forEach(a => a.addEventListener('click', () => setRole(a.dataset.jump, true)));
   paint();
@@ -959,7 +1000,7 @@
   const conn = navigator.connection || {};
   if (innerWidth >= 900 && !conn.saveData){
     const io = new IntersectionObserver(es => {
-      if (es.some(e => e.isIntersecting)){ io.disconnect(); ['suki', 'winter'].forEach(w => { if (!live[w]) load(w); }); }
+      if (es.some(e => e.isIntersecting)){ io.disconnect(); ['suki', 'winter'].forEach(w => { if (!live[w] && !pending[w]) load(w); }); }
     }, {rootMargin: '200px'});
     io.observe(document.querySelector('.phones'));
   }
