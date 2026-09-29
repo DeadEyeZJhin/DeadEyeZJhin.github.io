@@ -902,6 +902,12 @@
       const d = frame.contentDocument, s = d && d.getElementById('demo-strip');
       if (s) s.style.display = 'none';
       if (d && d.body) d.body.style.paddingBottom = '0';
+      // a phone has no scrollbar: hide it, keep the scrolling
+      if (d && d.head && !d.getElementById('ph-noscroll')){
+        const st = d.createElement('style'); st.id = 'ph-noscroll';
+        st.textContent = '*{scrollbar-width:none!important}*::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}';
+        d.head.appendChild(st);
+      }
     } catch (e) {}
   }
   function load(which){
