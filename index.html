@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Guile Pitogo — Operations & Automation</title>
-<meta name="description" content="I replace a business's notebooks, spreadsheets and group chats with one app its staff actually use. SukiRun: ₱120,608 ordered in its first 6 working days. Winter Services: from scope to a released Android app in 3 days. Try both live.">
+<meta name="description" content="I replace a business's notebooks, spreadsheets and group chats with one app its staff actually use. SukiRun: ₱165,768 ordered in its first 8 working days. Winter Services: from scope to a released Android app in 3 days. Try both live.">
 <meta property="og:title" content="Guile Pitogo — one app instead of the group chat">
 <meta property="og:description" content="Results, live demos and the numbers behind them. Operations & automation for small businesses, remote from Bacolod City (GMT+8).">
 <link rel="icon" href="assets/me.png">
@@ -139,6 +139,15 @@
   .shot:hover::after{opacity:1;transform:translate(-50%,-50%)}
   .shot.phone{width:min(46%,210px);aspect-ratio:375/812;border-radius:22px;border:6px solid #1d1d28}
   .shot.wide{width:100%;aspect-ratio:16/10}
+  /* paperwork: whole documents, white, never cropped */
+  .docs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6rem;align-items:start}
+  .docs figure{margin:0}
+  .shot.doc{background:#fff;border-radius:10px}
+  .shot.doc img{height:auto;object-fit:contain}
+  .docs figcaption{font-size:.86rem;color:var(--muted);margin-top:.75rem;line-height:1.5}
+  .docs figcaption b{color:var(--text)}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.8rem}
+  .chips span{font-size:.78rem;padding:.35rem .8rem;border:1px solid var(--border2);border-radius:999px;color:var(--muted);background:var(--card)}
 
   /* ── the network box: the live presentation, swipeable ── */
   .case.net{grid-template-columns:1fr;gap:1.6rem}
@@ -240,8 +249,15 @@
   .lightbox.active{display:flex}
   .lb-back{position:absolute;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(18px);animation:fade .25s ease}
   .lb-body{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1rem;animation:zoom .28s cubic-bezier(.34,1.56,.64,1)}
-  .lb-body img{max-width:92vw;max-height:82vh;border-radius:14px;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 80px rgba(0,0,0,.7)}
-  .lb-cap{font-size:.85rem;color:rgba(255,255,255,.65)}
+  .lb-stage{position:relative;overflow:hidden;border-radius:14px;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 80px rgba(0,0,0,.7);touch-action:none;line-height:0}
+  .lb-stage img{display:block;max-width:92vw;max-height:78vh;transform-origin:0 0;transition:transform .15s ease-out;cursor:zoom-in;user-select:none;-webkit-user-drag:none}
+  .lb-stage.zoomed img{cursor:grab}
+  .lb-stage.dragging img{cursor:grabbing;transition:none}
+  .lb-tools{display:flex;align-items:center;gap:.4rem}
+  .lb-tools button{min-width:38px;height:34px;padding:0 .7rem;border-radius:9px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font:inherit;font-size:.85rem;cursor:pointer}
+  .lb-tools button:hover{border-color:rgba(124,106,247,.6)}
+  .lb-tools .pct{min-width:3.4rem;text-align:center;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .lb-cap{font-size:.85rem;color:rgba(255,255,255,.65);text-align:center;padding:0 1rem}
   .lb-x{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
   .lightbox.closing .lb-body{animation:blurOut .35s ease forwards}
   .lightbox.closing .lb-back{animation:fade .35s ease reverse forwards}
@@ -263,7 +279,7 @@
     .nav-cta{margin-left:auto}
     .wrap{padding:0 1.2rem}
     section{padding:4rem 0}
-    .help,.steps{grid-template-columns:1fr}
+    .help,.steps,.docs{grid-template-columns:1fr}
     .phones{grid-template-columns:1fr;gap:3rem}
     .ba{grid-template-columns:1fr}
     .nums{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -293,6 +309,7 @@
   <a href="#" class="logo"><img src="assets/me.png" alt="Guile Pitogo"><span>Guile Pitogo<small>Operations &amp; automation</small></span></a>
   <ul class="nav-links">
     <li><a href="#results">Results</a></li>
+    <li><a href="#docs">Quotes &amp; receipts</a></li>
     <li><a href="#demo">Try it live</a></li>
     <li><a href="#help">What I fix</a></li>
     <li><a href="#also">Also built</a></li>
@@ -305,10 +322,10 @@
   <header class="hero" id="top">
     <div class="status"><span class="dot"></span>Available for remote work<span class="sep">•</span>Bacolod, PH<span class="sep">•</span><span id="clock">--:--</span><span style="opacity:.6">GMT+8</span></div>
     <h1>One app instead of the <span class="grad">notebook, the spreadsheet and the group chat.</span></h1>
-    <p class="lead">I build the system your staff actually use — phone in the field, PC in the office, same list for both. <b>The first one took ₱120,608 in orders in its first six working days.</b></p>
+    <p class="lead">I build the system your staff actually use — phone in the field, PC in the office, same list for both. <b>The first one took ₱165,768 in orders in its first eight working days.</b></p>
     <div class="kpis">
-      <div class="kpi"><div class="n g" data-count="120608" data-prefix="₱">₱120,608</div><div class="l">ordered through <b>SukiRun</b> in its first 6 working days</div></div>
-      <div class="kpi"><div class="n" data-count="86">86</div><div class="l">orders from <b>82 shops</b> — none typed twice, none added up by hand</div></div>
+      <div class="kpi"><div class="n g" data-count="165768" data-prefix="₱">₱165,768</div><div class="l">ordered through <b>SukiRun</b> in its first 8 working days</div></div>
+      <div class="kpi"><div class="n" data-count="111">111</div><div class="l">orders from <b>107 shops</b> — each one added up on the phone, not by hand</div></div>
       <div class="kpi"><div class="n p" data-count="3" data-suffix=" days">3 days</div><div class="l"><b>Winter Services</b>: from an empty folder to a released Android app</div></div>
       <div class="kpi"><div class="n" data-count="4549">4,549</div><div class="l">live connections on one router I set up and run <b>remotely</b></div></div>
     </div>
@@ -331,23 +348,23 @@
     <!-- SukiRun -->
     <article class="case reveal">
       <div>
-        <div class="who">Food distributor · Bacolod City · 3 field agents + office</div>
+        <div class="who">Food distributor · Bacolod City · 3 field agents + warehouse</div>
         <h3>SukiRun — orders taken on a phone, not a notebook</h3>
         <div class="ba">
-          <div class="b"><i>Before</i>Orders written in a notebook, added up on a calculator, then retyped into Messenger for the warehouse — three chances for a number to change.</div>
-          <div class="a"><i>After</i>The agent adds the order up on the phone in front of the shopkeeper. It reaches the office already typed, with a status everyone can see.</div>
+          <div class="b"><i>Before</i>Orders written in a notebook, added up on a calculator, then typed out again for the group chat — three chances for a number to change.</div>
+          <div class="a"><i>After</i>The agent adds the order up on the phone in front of the shopkeeper. One tap copies a ready-to-paste summary, and every order stays in one list with its status.</div>
         </div>
         <div class="nums">
-          <div><b>₱120,608</b><span>ordered in the first 6 working days</span></div>
-          <div><b>86</b><span>orders from 82 shops</span></div>
-          <div><b>705</b><span>order lines, none retyped</span></div>
-          <div><b>6 / 6</b><span>working days with orders</span></div>
+          <div><b>₱165,768</b><span>ordered in the first 8 working days</span></div>
+          <div><b>111</b><span>orders from 107 shops</span></div>
+          <div><b>949</b><span>order lines, added up on the phone</span></div>
+          <div><b>8 / 8</b><span>working days with orders</span></div>
           <div><b>214</b><span>products with photos, in groups</span></div>
           <div><b>₱0</b><span>monthly running cost</span></div>
         </div>
         <ul>
           <li><b>Live dashboard</b>: each agent's day and week against a monthly quota — no month-end tally.</li>
-          <li><b>Full order trail</b>: who confirmed, packed and delivered it, and when.</li>
+          <li><b>Full order trail</b>: who took it, who changed it, and when.</li>
           <li><b>Works with no signal</b> in the shop; phone and PC sync when it returns.</li>
         </ul>
         <div class="links">
@@ -437,6 +454,28 @@
 </section>
 </div>
 
+<!-- ═════════ PAPERWORK: THE REAL DOCUMENTS, ZOOMABLE ═════════ -->
+<section id="docs">
+  <div class="wrap">
+    <div class="eyebrow reveal">Invoicing &amp; quotations</div>
+    <h2 class="reveal">The quotation and the receipt — <span class="grad">made from the job, not typed.</span></h2>
+    <p class="sub reveal">Click a page, then scroll or pinch to zoom in.</p>
+    <div class="docs">
+      <figure class="reveal">
+        <div class="shot doc" data-full="assets/docs/quotation.png" data-cap="Quotation · filled in from the booking, sent as a PDF · invented customer"><img loading="lazy" src="assets/docs/quotation.png" alt="Winter Air quotation: two split aircons cleaned and one window aircon repaired, total PHP 2,800"></div>
+        <figcaption><b>Quotation</b> · from the booking, on the shop's letterhead, sent as a PDF</figcaption>
+      </figure>
+      <figure class="reveal">
+        <div class="shot doc" data-full="assets/docs/receipt.png" data-cap="Service receipt · from the job, with GCash to pay on the spot · invented customer"><img loading="lazy" src="assets/docs/receipt.png" alt="Winter Air service receipt: two window aircons cleaned, total PHP 1,200"></div>
+        <figcaption><b>Receipt</b> · from the job, for the technician to hand over — GCash printed on it</figcaption>
+      </figure>
+    </div>
+    <div class="chips reveal">
+      <span>Invoicing</span><span>Quotations</span><span>Booking &amp; scheduling</span><span>Dispatch</span><span>Order processing</span><span>Customer follow-up</span><span>IT support</span><span>YouTube &amp; video</span>
+    </div>
+  </div>
+</section>
+
 <!-- ═════════ TWO PHONES, ONE ROLE ═════════ -->
 <section id="demo">
   <div class="wrap" style="text-align:center">
@@ -485,7 +524,7 @@
     <h2 class="reveal">Tell me what your team does twice.</h2>
     <p class="sub reveal">Every card is a problem I have already solved for a real business — with the proof one click away.</p>
     <div class="help">
-      <div class="hcard reveal"><div class="was">Orders written down, then typed again</div><h3>One order app for field and office</h3><p>Taken on the phone, added up right, sent to the office already typed. Works with no signal.</p><a class="proof" href="#demo" data-jump="agent">Proof: SukiRun, live →</a></div>
+      <div class="hcard reveal"><div class="was">Orders written down, then typed again</div><h3>One order app for field and office</h3><p>Taken on the phone, added up right, copied to the group chat in one tap. Works with no signal.</p><a class="proof" href="#demo" data-jump="agent">Proof: SukiRun, live →</a></div>
       <div class="hcard reveal"><div class="was">Bookings lost in Messenger</div><h3>A booking page and a shared schedule</h3><p>Customers book with every detail at once; the office accepts in one tap; technicians see the day.</p><a class="proof" href="#demo" data-jump="customer">Proof: Winter Services, live →</a></div>
       <div class="hcard reveal"><div class="was">"Is my order still on?" calls</div><h3>A status everyone can see</h3><p>Every step with who did it and when — for the office, the field and the customer.</p><a class="proof" href="/winter-services-deck/#11" target="_blank" rel="noopener">Proof: full status →</a></div>
       <div class="hcard reveal"><div class="was">Sales and targets added up at month end</div><h3>Dashboards that count themselves</h3><p>Each person's day, week and month against a target. The owner stops counting by hand.</p><a class="proof" href="/sukirun-deck/#11" target="_blank" rel="noopener">Proof: SukiRun quotas →</a></div>
@@ -562,7 +601,13 @@
   <div class="lb-back" data-close></div>
   <div class="lb-body">
     <button class="lb-x" data-close aria-label="Close">✕</button>
-    <img id="lb-img" src="" alt="">
+    <div class="lb-stage" id="lb-stage"><img id="lb-img" src="" alt="" draggable="false"></div>
+    <div class="lb-tools">
+      <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
+      <span class="pct" id="lb-pct">100%</span>
+      <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
+      <button type="button" data-zoom="fit">Fit</button>
+    </div>
     <div class="lb-cap" id="lb-cap"></div>
   </div>
 </div>
@@ -763,7 +808,7 @@
     });
 
   // the "what I fix" cards take turns glowing, like the banner's
-  const cards = [...document.querySelectorAll('.hcard')]; let k = 0;
+  const cards = [...document.querySelectorAll('#help .hcard')]; let k = 0;
   setInterval(() => { cards.forEach(c => c.classList.remove('hl')); cards[k].classList.add('hl'); k = (k + 1) % cards.length; }, 1600);
 
   // lightbox
@@ -771,8 +816,57 @@
   document.querySelectorAll('.shot').forEach(s => s.addEventListener('click', () => {
     document.getElementById('lb-img').src = s.dataset.full;
     document.getElementById('lb-cap').textContent = s.dataset.cap || '';
+    zoom.reset();
     lb.classList.remove('closing'); lb.classList.add('active'); document.body.style.overflow = 'hidden';
   }));
+
+  // zoom in the lightbox: wheel, pinch, drag, double-click, and the − / + / Fit buttons.
+  // The picture fits the screen at 100%; zooming scales it inside its own frame.
+  const zoom = (() => {
+    const stage = document.getElementById('lb-stage'), img = document.getElementById('lb-img'), pct = document.getElementById('lb-pct');
+    const MAX = 6;
+    let s = 1, x = 0, y = 0;
+    const apply = () => {
+      if (s <= 1) { s = 1; x = 0; y = 0; }
+      const w = stage.clientWidth, h = stage.clientHeight;
+      x = Math.min(0, Math.max(w - w * s, x)); y = Math.min(0, Math.max(h - h * s, y));
+      img.style.transform = `translate(${x}px,${y}px) scale(${s})`;
+      stage.classList.toggle('zoomed', s > 1);
+      pct.textContent = Math.round(s * 100) + '%';
+    };
+    // keep the point under (cx, cy) in place while the scale changes
+    const at = (ns, cx, cy) => { ns = Math.min(MAX, Math.max(1, ns)); x = cx - (cx - x) * ns / s; y = cy - (cy - y) * ns / s; s = ns; apply(); };
+    const local = e => { const r = stage.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    const mid = () => [stage.clientWidth / 2, stage.clientHeight / 2];
+
+    stage.addEventListener('wheel', e => { e.preventDefault(); at(s * (e.deltaY < 0 ? 1.25 : 0.8), ...local(e)); }, {passive: false});
+    stage.addEventListener('dblclick', e => s > 1 ? (s = 1, apply()) : at(2.5, ...local(e)));
+
+    const pts = new Map(); let last = null, pinch = null;
+    stage.addEventListener('pointerdown', e => { stage.setPointerCapture(e.pointerId); pts.set(e.pointerId, local(e)); last = local(e);
+      if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = {d: Math.hypot(a[0] - b[0], a[1] - b[1]), s}; }
+      if (s > 1) stage.classList.add('dragging'); });
+    stage.addEventListener('pointermove', e => {
+      if (!pts.has(e.pointerId)) return;
+      pts.set(e.pointerId, local(e));
+      if (pts.size === 2 && pinch) {
+        const [a, b] = [...pts.values()];
+        at(pinch.s * Math.hypot(a[0] - b[0], a[1] - b[1]) / pinch.d, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2);
+      } else if (pts.size === 1 && s > 1) {
+        const p = local(e); x += p[0] - last[0]; y += p[1] - last[1]; last = p; apply();
+      }
+    });
+    const up = e => { pts.delete(e.pointerId); if (pts.size < 2) pinch = null; if (!pts.size) stage.classList.remove('dragging');
+      if (pts.size === 1) last = [...pts.values()][0]; };
+    stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
+
+    lb.querySelector('[data-zoom="in"]').addEventListener('click', () => at(s * 1.5, ...mid()));
+    lb.querySelector('[data-zoom="out"]').addEventListener('click', () => at(s / 1.5, ...mid()));
+    lb.querySelector('[data-zoom="fit"]').addEventListener('click', () => { s = 1; apply(); });
+    addEventListener('keydown', e => { if (!lb.classList.contains('active')) return;
+      if (e.key === '+' || e.key === '=') at(s * 1.5, ...mid()); if (e.key === '-') at(s / 1.5, ...mid()); if (e.key === '0') { s = 1; apply(); } });
+    return { reset() { s = 1; apply(); } };
+  })();
   const close = () => { if (!lb.classList.contains('active')) return; lb.classList.add('closing');
     setTimeout(() => { lb.classList.remove('active', 'closing'); document.body.style.overflow = ''; }, 340); };
   lb.querySelectorAll('[data-close]').forEach(x => x.addEventListener('click', close));
