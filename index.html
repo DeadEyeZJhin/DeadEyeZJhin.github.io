@@ -145,7 +145,7 @@
   .case.net .nums{grid-template-columns:repeat(6,minmax(0,1fr))}
   .case.net .ba{max-width:880px}
   .netview{width:100%;max-width:1040px;margin:0 auto}
-  .nv-stage{position:relative;width:100%;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:#05070f;
+  .nv-stage{position:relative;width:100%;aspect-ratio:4/3;border-radius:14px;overflow:hidden;background:#05070f;
     border:1px solid var(--border2);box-shadow:0 20px 50px rgba(0,0,0,.5);outline:none}
   .nv-stage:focus-visible{border-color:var(--accent)}
   .nv-stage iframe{position:absolute;top:0;left:0;width:1280px;height:800px;border:0;transform-origin:0 0;pointer-events:none;
@@ -791,13 +791,26 @@
     const b = document.createElement('button'); b.setAttribute('aria-label', sl.t);
     b.addEventListener('click', () => { stop(); show(k); }); dots.appendChild(b);
   });
-  function fit(){ if (f) f.style.transform = 'scale(' + (stage.clientWidth / 1280) + ')'; }
+  function fit(){
+    if (!f) return;
+    let h = 800;
+    try {
+      const sl = f.contentDocument.querySelector('.slide.on');
+      if (sl){ f.style.height = '800px'; sl.scrollTop = 0; h = Math.max(800, Math.ceil(sl.scrollHeight) + 4); }
+    } catch (e) {}
+    f.style.height = h + 'px';
+    const k = Math.min(stage.clientWidth / 1280, stage.clientHeight / h);
+    f.style.transform = 'translate(' + Math.round((stage.clientWidth - 1280 * k) / 2) + 'px,' +
+      Math.round((stage.clientHeight - h * k) / 2) + 'px) scale(' + k + ')';
+  }
+  // slides draw themselves in over a moment (the rack build grows): measure a few times
+  const refit = () => [0, 250, 700, 1500, 3000].forEach(ms => setTimeout(fit, ms));
   function tidy(){
     try {
       const d = f.contentDocument; if (!d || d.getElementById('nv-tidy')) return;
       const st = d.createElement('style'); st.id = 'nv-tidy';
       st.textContent = '.topbar,.rail,.navarrows,.hint,.progress,.speaker{display:none!important}' +
-        '.slide{padding-top:26px!important;padding-bottom:18px!important;overflow:hidden!important}';
+        '.slide{padding-top:26px!important;padding-bottom:22px!important;scrollbar-width:none!important}.slide::-webkit-scrollbar{display:none}';
       d.head.appendChild(st);
     } catch (e) {}
   }
@@ -806,7 +819,7 @@
     try { localStorage.setItem('nt-deck', 'full'); localStorage.setItem('nt-theme', 'dark'); } catch (e) {}
     f = document.createElement('iframe');
     f.title = 'Network presentation'; f.tabIndex = -1; f.setAttribute('aria-hidden', 'true');
-    f.addEventListener('load', () => { tidy(); fit(); const p = stage.querySelector('.nv-poster'); if (p) p.remove(); });
+    f.addEventListener('load', () => { tidy(); refit(); const p = stage.querySelector('.nv-poster'); if (p) p.remove(); });
     f.src = DECK + '#' + SLIDES[i].n;
     stage.insertBefore(f, stage.firstChild);
     fit();
@@ -822,7 +835,7 @@
     stage.classList.add('switching');
     setTimeout(() => {
       try { f.contentWindow.location.hash = '#' + sl.n; } catch (e) { f.src = DECK + '#' + sl.n; }
-      tidy();
+      tidy(); refit();
       setTimeout(() => stage.classList.remove('switching'), 120);
     }, 180);
   }
