@@ -945,6 +945,24 @@
   function load(which){
     const dev = document.getElementById('dev-' + which), scr = dev.querySelector('.screen');
     const want = role, r = ROLES[want][which];
+    // SukiRun already running: switch inside it (the demo exposes __demoRole). A blink of
+    // blur instead of opening the whole app again, which took seconds.
+    const cur = live[which];
+    if (which === 'suki' && cur && !pending.suki){
+      let hook = null; try { hook = cur.contentWindow.__demoRole; } catch (e) {}
+      if (typeof hook === 'function'){
+        try { localStorage.setItem('or_role', JSON.stringify(r.role)); } catch (e) {}
+        cur.classList.add('waiting');
+        clearTimeout(cur._t1); clearTimeout(cur._t2);
+        cur._t1 = setTimeout(() => {
+          try { hook(r.role); } catch (e) { cur.classList.remove('waiting'); pending.suki = null; live.suki = cur; return; }
+          hideStrip(cur);
+          cur._t2 = setTimeout(() => cur.classList.remove('waiting'), 140);   // the blur tweens out on the new screen
+        }, 260);
+        dev.classList.add('flash'); setTimeout(() => dev.classList.remove('flash'), 700);
+        return;
+      }
+    }
     const src = which === 'suki' ? SUKI + '?r=' + r.role : WINTER + '?p=' + r.as;
     if (pending[which]) pending[which].remove();
     const old = live[which], poster = scr.querySelector('.poster');
