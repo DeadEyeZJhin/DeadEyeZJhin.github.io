@@ -141,6 +141,11 @@
   .shot.wide{width:100%;aspect-ratio:16/10}
   /* paperwork: whole documents, white, never cropped */
   .docs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6rem;align-items:start}
+  .paper{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:1.4rem;transition:border-color .3s}
+  .paper:hover{border-color:rgba(124,106,247,.3)}
+  .paper .who{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent2);font-weight:600;margin-bottom:.4rem}
+  .paper h3{font-size:1.5rem;margin-bottom:1.3rem}
+  .paper h3 small{display:block;font-size:.85rem;font-weight:400;color:var(--muted);margin-top:.45rem;font-family:inherit}
   .docs figure{margin:0}
   .shot.doc{background:#fff;border-radius:10px}
   .shot.doc img{height:auto;object-fit:contain}
@@ -411,6 +416,25 @@
       </div>
     </article>
 
+    <!-- Winter's paperwork: the real documents, zoomable -->
+    <div class="paper reveal" id="docs">
+      <div class="who">Winter Services · invoicing &amp; quotations</div>
+      <h3>The quotation and the receipt — <span class="grad">made from the job, not typed.</span> <small>Click a page, then scroll or pinch to zoom.</small></h3>
+      <div class="docs">
+        <figure>
+          <div class="shot doc" data-full="assets/docs/quotation.png" data-cap="Quotation · filled in from the booking, sent as a PDF · invented customer"><img loading="lazy" src="assets/docs/quotation.png" alt="Winter Air quotation: two split aircons cleaned and one window aircon repaired, total PHP 2,800"></div>
+          <figcaption><b>Quotation</b> · from the booking, on the shop's letterhead, sent as a PDF</figcaption>
+        </figure>
+        <figure>
+          <div class="shot doc" data-full="assets/docs/receipt.png" data-cap="Service receipt · from the job, with GCash to pay on the spot · invented customer"><img loading="lazy" src="assets/docs/receipt.png" alt="Winter Air service receipt: two window aircons cleaned, total PHP 1,200"></div>
+          <figcaption><b>Receipt</b> · from the job, for the technician to hand over — GCash printed on it</figcaption>
+        </figure>
+      </div>
+      <div class="chips">
+        <span>Invoicing</span><span>Quotations</span><span>Booking &amp; scheduling</span><span>Dispatch</span><span>Order processing</span><span>Customer follow-up</span><span>IT support</span><span>YouTube &amp; video</span>
+      </div>
+    </div>
+
     <!-- Networks -->
     <article class="case net reveal">
       <div>
@@ -453,28 +477,6 @@
   </div>
 </section>
 </div>
-
-<!-- ═════════ PAPERWORK: THE REAL DOCUMENTS, ZOOMABLE ═════════ -->
-<section id="docs">
-  <div class="wrap">
-    <div class="eyebrow reveal">Invoicing &amp; quotations</div>
-    <h2 class="reveal">The quotation and the receipt — <span class="grad">made from the job, not typed.</span></h2>
-    <p class="sub reveal">Click a page, then scroll or pinch to zoom in.</p>
-    <div class="docs">
-      <figure class="reveal">
-        <div class="shot doc" data-full="assets/docs/quotation.png" data-cap="Quotation · filled in from the booking, sent as a PDF · invented customer"><img loading="lazy" src="assets/docs/quotation.png" alt="Winter Air quotation: two split aircons cleaned and one window aircon repaired, total PHP 2,800"></div>
-        <figcaption><b>Quotation</b> · from the booking, on the shop's letterhead, sent as a PDF</figcaption>
-      </figure>
-      <figure class="reveal">
-        <div class="shot doc" data-full="assets/docs/receipt.png" data-cap="Service receipt · from the job, with GCash to pay on the spot · invented customer"><img loading="lazy" src="assets/docs/receipt.png" alt="Winter Air service receipt: two window aircons cleaned, total PHP 1,200"></div>
-        <figcaption><b>Receipt</b> · from the job, for the technician to hand over — GCash printed on it</figcaption>
-      </figure>
-    </div>
-    <div class="chips reveal">
-      <span>Invoicing</span><span>Quotations</span><span>Booking &amp; scheduling</span><span>Dispatch</span><span>Order processing</span><span>Customer follow-up</span><span>IT support</span><span>YouTube &amp; video</span>
-    </div>
-  </div>
-</section>
 
 <!-- ═════════ TWO PHONES, ONE ROLE ═════════ -->
 <section id="demo">
