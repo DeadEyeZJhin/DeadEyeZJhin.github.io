@@ -961,19 +961,27 @@
       let search = ''; try { search = nf.contentWindow.location.search; } catch (e) {}
       if (which === 'winter' && /[?&]as=/.test(search)) return;   // it is still switching person: one more load
       hideStrip(nf); setTimeout(() => hideStrip(nf), 300);
-      if (which === 'suki') setTimeout(() => {
-        // SukiRun's very first open loads its invented data and lands on the role menu:
-        // put the role back and open it once more, still out of sight
-        let now = null; try { now = localStorage.getItem('or_role'); } catch (e) {}
-        if (now !== JSON.stringify(r.role) && !retried){ retried = true; setRole(); nf.src = src; return; }
-        setTimeout(reveal, 250);
-      }, 450);
-      else setTimeout(reveal, 550);                              // let the screen draw before it shows
+      // "loaded" is not "drawn": SukiRun is 7 MB and sets itself up after it loads. Wait
+      // until the new screen has something on it, then show it.
+      const drawn = () => { try { const b = nf.contentDocument.body; return !!b && b.innerText.trim().length > 40; } catch (e) { return false; } };
+      let polls = 0;
+      (function wait(){
+        if (pending[which] !== nf || done) return;
+        if (!drawn() && ++polls < 60){ setTimeout(wait, 150); return; }
+        if (which === 'suki'){
+          // SukiRun's very first open loads its invented data and lands on the role menu:
+          // put the role back and open it once more, still out of sight
+          let now = null; try { now = localStorage.getItem('or_role'); } catch (e) {}
+          if (now !== JSON.stringify(r.role) && !retried){ retried = true; setRole(); nf.src = src; return; }
+        }
+        hideStrip(nf);
+        setTimeout(reveal, 300);                                 // one more moment to finish drawing
+      })();
     });
     setRole();
     scr.appendChild(nf);
     nf.src = src;
-    setTimeout(reveal, 9000);                                    // never leave it blurred for good
+    setTimeout(reveal, 15000);                                   // never leave it blurred for good
     dev.classList.add('flash'); setTimeout(() => dev.classList.remove('flash'), 700);
   }
   function paint(){
